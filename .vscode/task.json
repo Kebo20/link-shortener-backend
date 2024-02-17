@@ -1,0 +1,21 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "npm-run",
+      "type": "npm",
+      "script": "dev",
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    },
+    {
+      "label": "nvm-use",
+      "type": "nvm",
+      "script": "use 20.11.0",
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    }
+  ]
+}

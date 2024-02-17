@@ -1,0 +1,19 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "nvm-use",
+      "type": "shell",
+      "command": "nvm",
+      "args": [
+        "use",
+        "20.11.0"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ],
+  "preLaunchTask": "nvm-use"
+}
