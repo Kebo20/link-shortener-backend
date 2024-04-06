@@ -111,4 +111,21 @@ export class SessionController {
 
     }
 
+    logout = async (req, res, next) => {
+        try {
+            const token = res.locals.token;
+
+            const accessToken = await AccessTokenModel.update({ revoked: 1 }, { where: { token: token } });
+            if (!accessToken) {
+                throw new HttpError({
+                    code: 'BAD_REQUEST',
+                    message: 'Token no encontrado',
+                });
+            }
+            res.json({ message: 'Logout success' });
+        } catch (error) {
+            next(error);
+        }
+    };
+
 }

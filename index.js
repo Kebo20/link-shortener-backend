@@ -14,8 +14,8 @@ app.disable('x-powered-by') //POR SEGURIDAD
 const PORT = process.env.PORT ?? 5000
 
 const limiter = rateLimit({
-    windowMs: 1000 * 10,// 60 * 60 * 1000, // 1 hora en milisegundos
-    max: 2, // Límite de solicitudes por IP en la ventana especificada
+    windowMs: 1000 * 60,// en milisegundos
+    max: 200, // Límite de solicitudes por IP en la ventana especificada
     message: {
         code: 'TOO_MANY_REQUESTS',
         message: 'Has excedido el límite de solicitudes. Inténtalo de nuevo más tarde.',
