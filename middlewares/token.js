@@ -7,7 +7,7 @@ export const validateToken = async (req, res, next) => {
 
         const token = req.headers['x-access-token'];
         if (!token) {
-            throw Error('Invalid parameters');
+            throw Error('Sesión inválida');
         }
 
 

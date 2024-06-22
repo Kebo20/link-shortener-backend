@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../config/db.js'
+import { PersonModel } from './person.js';
 
 export const UserModel = sequelize.define(
     'users',
@@ -10,6 +11,9 @@ export const UserModel = sequelize.define(
             primaryKey: true,
         },
         userName: {
+            type: DataTypes.STRING,
+        },
+        email: {
             type: DataTypes.STRING,
         },
         password: {
@@ -27,15 +31,38 @@ export const UserModel = sequelize.define(
         reset: {
             type: DataTypes.INTEGER,
         },
-        passwordExpired: {
-            type: DataTypes.INTEGER,
-        },
-        lastChangePassword: {
-            type: DataTypes.DATE,
-        },
+
         acceptPrivacyPolicy: {
             type: DataTypes.INTEGER,
         },
+        createdBy: {
+            type: DataTypes.STRING,
+        },
+
+        updatedBy: {
+            type: DataTypes.STRING,
+        },
+
+        deletedBy: {
+            type: DataTypes.STRING,
+        },
+
+
+        creationDate: {
+            type: DataTypes.DATE,
+            defaultValue: sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
+        },
+
+        updateDate: {
+            type: DataTypes.DATE,
+            defaultValue: sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
+
+        },
+
+        deletionDate: {
+            type: DataTypes.DATE,
+        },
+
 
 
     },
@@ -43,5 +70,7 @@ export const UserModel = sequelize.define(
         timestamps: false,
         freezeTableName: true,
     });
+
+UserModel.belongsTo(PersonModel, { foreignKey: 'idUser', targetKey: 'idPerson' });
 
 

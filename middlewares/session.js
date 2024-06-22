@@ -6,7 +6,7 @@ export const validatorLogin = async (req, res, next) => {
         const input = req.body;
 
         const schema = z.object({
-            userName: z.string(),
+            email: z.string().email(),
             password: z.string()
         })
 

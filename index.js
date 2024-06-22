@@ -5,6 +5,8 @@ import { routerExpress } from './routes/index.js'
 import { errorHandler } from "./utils/handleError.js";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
+process.env.TZ = 'America/Lima';
+
 const app = express()
 app.use(json())
 app.use(corsMiddleware())

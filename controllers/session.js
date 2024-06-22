@@ -11,11 +11,11 @@ export class SessionController {
     login = async (req, res, next) => {
         try {
 
-            const { userName, password } = res.locals.body;
+            const { email, password } = res.locals.body;
             const customer = res.locals.customer;
             const user = await UserModel.findOne({
                 where: {
-                    userName: userName,
+                    email: email,
                     status: 1,
                 },
             });
@@ -27,7 +27,9 @@ export class SessionController {
             }
 
             let permitedSession = false;
-            const finalNodeGeneratedHash = user.password.replace('$2y$', '$2a$');
+            // const finalNodeGeneratedHash = user.password.replace('$2y$', '$2a$');
+            const finalNodeGeneratedHash = user.password;
+
             const correct = await bcrypt.compare(password, finalNodeGeneratedHash);
             if (correct) {
                 permitedSession = true;
