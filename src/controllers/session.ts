@@ -1,18 +1,18 @@
-import { UserModel } from '../models/user.js'
-import { sequelize } from '../config/db.js'
-import { AccessTokenModel } from '../models/accessToken.js'
-import { HttpError } from '../utils/handleError.js'
+import UserModel from '../models/user'
+import AccessTokenModel from '../models/accessToken'
+import { HttpError } from '../utils/handleError'
 import { DateTime } from 'luxon'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import { NextFunction, Request, Response } from "express";
+
 
 export class SessionController {
 
-    login = async (req, res, next) => {
+    login = async (req: Request, res: Response, next: NextFunction) => {
         try {
 
             const { email, password } = res.locals.body;
-            const customer = res.locals.customer;
             const user = await UserModel.findOne({
                 where: {
                     email: email,
@@ -38,7 +38,7 @@ export class SessionController {
             // const transaction = await sequelize.transaction();
 
             if (permitedSession) {
-                const SIMULTANEOUS_SESSIONS = { value: 3 };
+                const SIMULTANEOUS_SESSIONS = { value: 30 };
 
                 const accessToken = await AccessTokenModel.findAll({
                     where: { idUser: user.idUser, revoked: 0 },
@@ -50,13 +50,14 @@ export class SessionController {
                     });
                 }
                 if (user.reset === 1) {
-                    const PASSWORD_EXPIRATION_MINUTES = await OptionModel(db).findOne({
-                        where: { key: 'PASSWORD_EXPIRATION_MINUTES' },
-                    });
+                    const PASSWORD_EXPIRATION_MINUTES = { value: 700 }
+                    // await OptionModel(db).findOne({
+                    //     where: { key: 'PASSWORD_EXPIRATION_MINUTES' },
+                    // });
 
                     if (PASSWORD_EXPIRATION_MINUTES) {
                         const now = DateTime.now();
-                        const dayLastPassword = DateTime.fromISO(user.lastChangePassword).plus({
+                        const dayLastPassword = DateTime.fromISO((user.lastChangePassword).toISOString()).plus({
                             minutes: PASSWORD_EXPIRATION_MINUTES.value,
                         });
 
@@ -75,17 +76,21 @@ export class SessionController {
                     userName: user.userName,
                     idGroup: user.idGroup,
                 };
-                const token = jwt.sign(jsonSign, process.env.TOKEN_JWT, { expiresIn: '7d' });
-                const { exp } = jwt.verify(token, process.env.TOKEN_JWT);
+                const JWT_SECRET = process.env.TOKEN_JWT || "kebo24";
 
-                let expiresAt = new Date(exp * 1000).toISOString();
+                const token = jwt.sign(jsonSign, JWT_SECRET, { expiresIn: '7d' });
+
+                const currentDate = new Date();
+                currentDate.setDate(currentDate.getDate() + 7);
+                let expiresAt = currentDate;
 
                 await AccessTokenModel.create({
                     idUser: user.idUser,
                     token,
-                    created_at: new Date().toISOString(),
-                    updated_at: new Date().toISOString(),
+                    created_at: new Date(),
+                    updated_at: new Date(),
                     expires_at: expiresAt,
+                    revoked: 0
                 });
 
                 const response = {
@@ -113,7 +118,7 @@ export class SessionController {
 
     }
 
-    logout = async (req, res, next) => {
+    logout = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const token = res.locals.token;
 

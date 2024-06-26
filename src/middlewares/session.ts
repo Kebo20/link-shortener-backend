@@ -1,7 +1,8 @@
 import z from 'zod'
-import { HttpError } from '../utils/handleError.js';
+import { HttpError } from '../utils/handleError';
+import { NextFunction, Request, Response } from "express";
 
-export const validatorLogin = async (req, res, next) => {
+export const validatorLogin = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const input = req.body;
 

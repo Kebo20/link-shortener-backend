@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "es2016", // Define el estándar de JavaScript a ES2020
+    "module": "CommonJS", // Usa el sistema de módulos ESNext
+    "moduleResolution": "node", // Usa el sistema de resolución de módulos Node.js
+    "esModuleInterop": true, // Habilita la interoperabilidad de módulos ES y CommonJS
+    "forceConsistentCasingInFileNames": true, // Fuerza consistencia en el uso de mayúsculas y minúsculas en los nombres de archivos
+    "strict": true, // Habilita todas las verificaciones estrictas
+    "skipLibCheck": true, // Omite la comprobación de tipos de archivos de declaración
+    "outDir": "./dist", // Directorio de salida para los archivos compilados
+    "rootDir": "./src", // Directorio raíz de tu proyecto
+    "resolveJsonModule": true, // Permite importar módulos JSON
+    "allowSyntheticDefaultImports": true, // Permite la importación de módulos con default imports sintéticos
+    "experimentalDecorators": true, // Habilita el uso de decoradores experimentales
+    "emitDecoratorMetadata": true // Emite metadatos para los decoradores
+  },
+  "include": [
+    "src/**/*.ts"
+  ], // Incluye todos los archivos .ts en el directorio src
+  "exclude": [
+    "node_modules"
+  ] // Excluye el directorio node_modules
+}

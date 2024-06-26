@@ -1,27 +1,32 @@
-import { UserModel } from '../models/user.js'
-import { PersonModel } from '../models/person.js'
+import UserModel from '../models/user'
+import PersonModel from '../models/person'
+import { Op } from "sequelize";
 
-import { sequelize } from '../config/db.js'
-import { AccessTokenModel } from '../models/accessToken.js'
-import { HttpError } from '../utils/handleError.js'
+import { sequelize } from '../config/db'
+import AccessTokenModel from '../models/accessToken'
+import { HttpError } from '../utils/handleError'
 import bcrypt from 'bcrypt'
+import { NextFunction, Request, Response } from "express";
+import { UserAttributes } from '../interfaces/user';
+import { PersonAttributes } from '../interfaces/person';
 
 export class UserController {
 
 
-    register = async (req, res, next) => {
+    register = async (req: Request, res: Response, next: NextFunction) => {
 
         const transaction = await sequelize.transaction();
 
         try {
 
             const { userName, password, email, document, firstName, lastName, sex, phone, address, birthDate } = res.locals.body;
+
             const { idUser } = res.locals.tokenResponse
 
 
             const oUser = await UserModel.findOne({
                 where: {
-                    [sequelize.Sequelize.Op.or]: [
+                    [Op.or]: [
                         { userName },
                         { email }
                     ],
@@ -49,30 +54,13 @@ export class UserController {
             }
 
 
-            const newPerson = await PersonModel.create(
-                {
-                    firstName,
-                    lastName,
-                    fullName: firstName + ' ' + lastName,
-                    document,
-                    sex,
-                    address,
-                    phone,
-                    birthDate,
-                    createdBy: idUser,
-                },
-                { transaction },
+            const newDataPerson: PersonAttributes = { email, document, firstName, lastName, fullName: firstName + ' ' + lastName, sex, phone, address, birthDate, createdBy: idUser, status: 1, creationDate: new Date() }
+            const newPerson = await PersonModel.create(newDataPerson, { transaction })
 
-            )
+            const newDataUser: UserAttributes = { idUser: newPerson.idPerson, userName, password: await bcrypt.hash(password, 10), email, createdBy: idUser, toChange: 0, status: 1, creationDate: new Date() }
 
             await UserModel.create(
-                {
-                    idUser: newPerson.idPerson,
-                    userName,
-                    password: await bcrypt.hash(password, 10),
-                    email,
-                    createdBy: idUser,
-                },
+                newDataUser,
                 { transaction },
 
             )
@@ -91,7 +79,7 @@ export class UserController {
 
     }
 
-    update = async (req, res, next) => {
+    update = async (req: Request, res: Response, next: NextFunction) => {
 
         const transaction = await sequelize.transaction();
 
@@ -123,11 +111,11 @@ export class UserController {
 
             const oUser = await UserModel.findOne({
                 where: {
-                    [sequelize.Sequelize.Op.or]: [
+                    [Op.or]: [
                         { userName },
                         { email }
                     ],
-                    idUser: { [sequelize.Sequelize.Op.not]: id },
+                    idUser: { [Op.not]: id },
                     status: 1,
                 },
             });
@@ -142,7 +130,7 @@ export class UserController {
                 where: {
                     document: document,
                     status: 1,
-                    idPerson: { [sequelize.Sequelize.Op.not]: id },
+                    idPerson: { [Op.not]: id },
                 },
             });
             if (oPerson) {
@@ -164,12 +152,12 @@ export class UserController {
                     phone,
                     birthDate,
                     updatedBy: idUser,
-                    updateDate: new Date().toISOString()
+                    updateDate: new Date()
                 },
                 {
-                    where: { idPerson: id, status: 1 }
+                    where: { idPerson: id, status: 1 },
+                    transaction
                 },
-                { transaction },
 
             )
 
@@ -179,13 +167,13 @@ export class UserController {
                     password: await bcrypt.hash(password, 10),
                     email,
                     updatedBy: idUser,
-                    updateDate: new Date().toISOString(),
+                    updateDate: new Date(),
 
                 },
                 {
-                    where: { idUser: id, status: 1 }
+                    where: { idUser: id, status: 1 },
+                    transaction
                 },
-                { transaction },
 
             )
 
@@ -204,7 +192,7 @@ export class UserController {
 
     }
 
-    delete = async (req, res, next) => {
+    delete = async (req: Request, res: Response, next: NextFunction) => {
 
         const transaction = await sequelize.transaction();
 
@@ -238,12 +226,12 @@ export class UserController {
                 {
                     status: 0,
                     deletedBy: idUser,
-                    deletionDate: new Date().toISOString()
+                    deletionDate: new Date()
                 },
                 {
-                    where: { idPerson: id, status: 1 }
+                    where: { idPerson: id, status: 1 },
+                    transaction
                 },
-                { transaction },
 
             )
 
@@ -251,12 +239,12 @@ export class UserController {
                 {
                     status: 0,
                     deletedBy: idUser,
-                    deletionDate: new Date().toISOString()
+                    deletionDate: new Date()
                 },
                 {
-                    where: { idUser: id, status: 1 }
+                    where: { idUser: id, status: 1 },
+                    transaction
                 },
-                { transaction },
 
             )
 
@@ -275,7 +263,7 @@ export class UserController {
 
     }
 
-    list = async (req, res, next) => {
+    list = async (req: Request, res: Response, next: NextFunction) => {
 
         const transaction = await sequelize.transaction();
 
@@ -296,9 +284,9 @@ export class UserController {
                     attributes: ['userName', 'email'],
                     // raw: true,// Devuelve los resultados como objetos JSON planos
 
+                    transaction
 
                 },
-                { transaction },
 
             )
 

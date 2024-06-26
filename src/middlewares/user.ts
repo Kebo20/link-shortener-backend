@@ -1,7 +1,8 @@
 import z from 'zod'
-import { HttpError } from '../utils/handleError.js';
+import { HttpError } from '../utils/handleError';
+import { NextFunction, Request, Response } from "express";
 
-export const validatorRegisterUser = async (req, res, next) => {
+export const validatorRegisterUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const input = req.body;
 
@@ -17,7 +18,18 @@ export const validatorRegisterUser = async (req, res, next) => {
             phone: z.string().regex(/^\+(?:[0-9] ?){6,14}[0-9]$/).optional(), // Valida que el campo sea una cadena de caracteres que cumpla con un formato de número de teléfono internacional
             birthDate: z.coerce.date().max(new Date())
 
-        }).partial().required("userName", "password", "firstName", "lastName", "document", "sex", "birthDate")
+        }).partial({
+            address: true,
+            phone: true
+        }).required({
+            userName: true,
+            password: true,
+            firstName: true,
+            lastName: true,
+            document: true,
+            sex: true,
+            birthDate: true
+        });
 
         const resultValidateData = schema.safeParse(input)
 
@@ -38,7 +50,7 @@ export const validatorRegisterUser = async (req, res, next) => {
     }
 };
 
-export const validatorUpdateUser = async (req, res, next) => {
+export const validatorUpdateUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const input = { ...req.body, id: req.params.id };
         const schema = z.object({
@@ -74,7 +86,7 @@ export const validatorUpdateUser = async (req, res, next) => {
     }
 };
 
-export const validatorDeleteUser = async (req, res, next) => {
+export const validatorDeleteUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const input = { id: req.params.id };
         const schema = z.object({

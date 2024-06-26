@@ -7,9 +7,11 @@ const ACCEPTED_ORIGINS = [
     'https://midu.dev'
 ]
 
+
+
 export const corsMiddleware = ({ acceptedOrigins = ACCEPTED_ORIGINS } = {}) => cors({
     origin: (origin, callback) => {
-        if (acceptedOrigins.includes(origin)) {
+        if (acceptedOrigins.includes(`${origin}`)) {
             return callback(null, true)
         }
 

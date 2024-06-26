@@ -1,8 +1,8 @@
 import express, { json } from "express";
 import 'dotenv/config'
-import { corsMiddleware } from './middlewares/cors.js'
-import { routerExpress } from './routes/index.js'
-import { errorHandler } from "./utils/handleError.js";
+import { corsMiddleware } from './middlewares/cors'
+import { routerExpress } from './routes/index'
+import { errorHandler } from "./utils/handleError";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 process.env.TZ = 'America/Lima';

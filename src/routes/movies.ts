@@ -1,7 +1,7 @@
 import express from "express";
-import { validatorFilter, validatorCreate, validatorUpdate } from '../middlewares/movie.js'
-import { MovieController } from '../controllers/movie.js'
-import { validateToken } from "../middlewares/token.js"
+import { validatorFilter, validatorCreate, validatorUpdate } from '../middlewares/movie'
+import { MovieController } from '../controllers/movie'
+import { validateToken } from "../middlewares/token"
 
 export const router = express.Router()
 

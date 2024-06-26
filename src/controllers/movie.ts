@@ -1,12 +1,14 @@
-import { MovieModel } from '../models/movie.js'
-import { HttpError } from '../utils/handleError.js'
+import { MovieModel } from '../models/movie'
+import { HttpError } from '../utils/handleError'
 import { DateTime } from 'luxon'
+import { NextFunction, Request, Response } from "express";
+
 export class MovieController {
     // constructor({ movieModel }) {
     //     this.movieModel = movieModel
     // }
 
-    getAll = async (req, res, next) => {
+    getAll = async (req: Request, res: Response, next: NextFunction) => {
 
         try {
 
@@ -28,7 +30,7 @@ export class MovieController {
 
     }
 
-    create = async (req, res, next) => {
+    create = async (req: Request, res: Response, next: NextFunction) => {
 
         try {
 
@@ -47,7 +49,7 @@ export class MovieController {
 
     }
 
-    update = async (req, res, next) => {
+    update = async (req: Request, res: Response, next: NextFunction) => {
 
         try {
 

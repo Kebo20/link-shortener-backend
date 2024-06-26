@@ -1,8 +1,8 @@
 import express from "express";
-import { validatorRegisterUser, validatorUpdateUser, validatorDeleteUser } from '../middlewares/user.js'
-import { validateToken } from '../middlewares/token.js'
+import { validatorRegisterUser, validatorUpdateUser, validatorDeleteUser } from '../middlewares/user'
+import { validateToken } from '../middlewares/token'
 
-import { UserController } from '../controllers/user.js'
+import { UserController } from '../controllers/user'
 
 
 export const router = express.Router()

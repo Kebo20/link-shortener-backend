@@ -1,8 +1,8 @@
 import express from "express";
-import { validatorLogin } from '../middlewares/session.js'
-import { validateToken } from '../middlewares/token.js'
+import { validatorLogin } from '../middlewares/session'
+import { validateToken } from '../middlewares/token'
 
-import { SessionController } from '../controllers/session.js'
+import { SessionController } from '../controllers/session'
 
 
 export const router = express.Router()

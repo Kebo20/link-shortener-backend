@@ -1,5 +1,6 @@
 import z from 'zod'
-import { HttpError } from '../utils/handleError.js';
+import { HttpError } from '../utils/handleError';
+import { NextFunction, Request, Response } from "express";
 
 // const movieSchema = z.object({
 //     title: z.string({
@@ -31,7 +32,7 @@ import { HttpError } from '../utils/handleError.js';
 // }
 
 
-export const validatorCreate = async (req, res, next) => {
+export const validatorCreate = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const input = req.body;
 
@@ -76,7 +77,7 @@ export const validatorCreate = async (req, res, next) => {
     }
 };
 
-export const validatorFilter = async (req, res, next) => {
+export const validatorFilter = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const input = req.body;
         const movieSchema = z.object({
@@ -118,7 +119,7 @@ export const validatorFilter = async (req, res, next) => {
     }
 };
 
-export const validatorUpdate = async (req, res, next) => {
+export const validatorUpdate = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { id } = req.params;
         const input = { id, ...req.body };
