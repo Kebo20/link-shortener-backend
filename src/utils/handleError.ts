@@ -30,8 +30,10 @@ class HttpError extends Error {
 import { Request, Response, NextFunction } from 'express';
 
 const errorHandler = (err: HttpError, req: Request, res: Response, next: NextFunction) => {
-    const statusCode = TableCodes[err.code] || TableCodes.INTERNAL_SERVER;
-    res.status(statusCode).json({ code: err.code, message: err.message });
+    let code = err.code ?? 'INTERNAL_SERVER'
+    const statusCode = TableCodes[code]
+    console.log(err)
+    res.status(statusCode).json({ code, message: err.message });
 };
 
 export { HttpError, errorHandler };

@@ -3,17 +3,18 @@ import PersonModel from '../models/person'
 import { Op } from "sequelize";
 
 import { sequelize } from '../config/db'
-import AccessTokenModel from '../models/accessToken'
 import { HttpError } from '../utils/handleError'
 import bcrypt from 'bcrypt'
 import { NextFunction, Request, Response } from "express";
 import { UserAttributes } from '../interfaces/user';
 import { PersonAttributes } from '../interfaces/person';
+import { UserService } from '../services/user';
+import { PersonService } from '../services/person';
 
 export class UserController {
 
 
-    register = async (req: Request, res: Response, next: NextFunction) => {
+    register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
         const transaction = await sequelize.transaction();
 
@@ -24,15 +25,7 @@ export class UserController {
             const { idUser } = res.locals.tokenResponse
 
 
-            const oUser = await UserModel.findOne({
-                where: {
-                    [Op.or]: [
-                        { userName },
-                        { email }
-                    ],
-                    status: 1,
-                },
-            });
+            const oUser = await UserService.existByEmailOrUsername({ userName, email })
             if (oUser) {
                 throw new HttpError({
                     code: 'BAD_REQUEST',
@@ -40,12 +33,7 @@ export class UserController {
                 });
             }
 
-            const oPerson = await PersonModel.findOne({
-                where: {
-                    document: document,
-                    status: 1,
-                },
-            });
+            const oPerson = await PersonService.existByDocument(document)
             if (oPerson) {
                 throw new HttpError({
                     code: 'BAD_REQUEST',
@@ -55,15 +43,10 @@ export class UserController {
 
 
             const newDataPerson: PersonAttributes = { email, document, firstName, lastName, fullName: firstName + ' ' + lastName, sex, phone, address, birthDate, createdBy: idUser, status: 1, creationDate: new Date() }
-            const newPerson = await PersonModel.create(newDataPerson, { transaction })
+            const newPerson = await PersonService.createPerson(newDataPerson, transaction)
 
             const newDataUser: UserAttributes = { idUser: newPerson.idPerson, userName, password: await bcrypt.hash(password, 10), email, createdBy: idUser, toChange: 0, status: 1, creationDate: new Date() }
-
-            await UserModel.create(
-                newDataUser,
-                { transaction },
-
-            )
+            await UserService.createUser(newDataUser, transaction)
 
             await transaction.commit();
             res.json({ message: 'Usuario registrado correctamente ' });
@@ -79,7 +62,7 @@ export class UserController {
 
     }
 
-    update = async (req: Request, res: Response, next: NextFunction) => {
+    update = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
         const transaction = await sequelize.transaction();
 
@@ -192,7 +175,7 @@ export class UserController {
 
     }
 
-    delete = async (req: Request, res: Response, next: NextFunction) => {
+    delete = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
         const transaction = await sequelize.transaction();
 
@@ -263,7 +246,7 @@ export class UserController {
 
     }
 
-    list = async (req: Request, res: Response, next: NextFunction) => {
+    list = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
         const transaction = await sequelize.transaction();
 
