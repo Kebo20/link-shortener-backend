@@ -1,17 +1,24 @@
-import UserModel from '../models/user'
-import PersonModel from '../models/person'
-import { Op } from 'sequelize';
+import UserModel from '../model/user'
+import PersonModel from '../model/person'
+import { Op } from "sequelize";
 
-import { sequelize } from '../config/db'
+import { sequelize } from '../db/mysql'
 import { HttpError } from '../utils/handleError'
 import bcrypt from 'bcrypt'
 import { NextFunction, Request, Response } from "express";
-import { UserAttributes } from '../interfaces/user';
-import { PersonAttributes } from '../interfaces/person';
-import { UserService } from '../services/user';
-import { PersonService } from '../services/person';
+import { UserUseCase } from '../../application/useCase/user.caseUse';
+import { PersonUseCase } from '../../application/useCase/person.caseUse';
+import { PersonEntity } from '../../domain/entity/person.entity';
+import { UserEntity } from '../../domain/entity/user.entity';
+// import { UserAttributes } from '../interfaces/user';
+// import { PersonAttributes } from '../interfaces/person';
+// import { UserService } from '../services/user';
+// import { PersonService } from '../services/person';
 
 export class UserController {
+
+    constructor(private userUseCase: UserUseCase, private personUseCase: PersonUseCase) {
+    }
 
 
     register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -20,28 +27,27 @@ export class UserController {
 
         try {
 
-            const { userName, password, email, document, firstName, lastName, sex, phone, address, birthDate } = res.locals.body;
-
-            const { idUser } = res.locals.tokenResponse
-
-
-            const oUser = await UserService.existByEmailOrUsername({ userName, email })
+            // const { userName, password, email, document, firstName, lastName, sex, phone, address, birthDate } = res.locals.body;
+            const { userName, password, email, document, firstName, lastName, sex, phone, address, birthDate } = req.body;
 
 
-            const oPerson = await PersonService.existByDocument(document)
-            if (oPerson) {
-                throw new HttpError({
-                    code: 'BAD_REQUEST',
-                    message: 'Documento ya registrado',
-                });
-            }
+            // const { idUser } = res.locals.tokenResponse
+
+            const idUser = '1'
+
+            await sequelize.transaction(async () => {
+
+                await this.userUseCase.findEmailOrUsername({ userName, email })
+                await this.personUseCase.existByDocument(document)
 
 
-            const newDataPerson: PersonAttributes = { email, document, firstName, lastName, fullName: firstName + ' ' + lastName, sex, phone, address, birthDate, createdBy: idUser, status: 1, creationDate: new Date() }
-            const newPerson = await PersonService.createPerson(newDataPerson, transaction)
+                const newDataPerson: PersonEntity = { email, document, firstName, lastName, fullName: firstName + ' ' + lastName, sex, phone, address, birthDate, createdBy: idUser, creationDate: new Date() }
+                const newPerson = await this.personUseCase.registerPerson(newDataPerson)
 
-            const newDataUser: UserAttributes = { idUser: newPerson.idPerson, userName, password: await bcrypt.hash(password, 10), email, createdBy: idUser, toChange: 0, status: 1, creationDate: new Date() }
-            await UserService.createUser(newDataUser, transaction)
+                const newDataUser: UserEntity = { idUser: newPerson.idPerson!, userName, password: await bcrypt.hash(password, 10), email, createdBy: idUser, toChange: 0, status: 1, creationDate: new Date(), idGroup: 1 }
+                await this.userUseCase.registerUser(newDataUser)
+            })
+
 
             await transaction.commit();
             res.json({ message: 'Usuario registrado correctamente ' });
@@ -69,7 +75,7 @@ export class UserController {
             const oPersonValidate = await PersonModel.findOne({
                 where: {
                     idPerson: id,
-                    status: 1,
+                    // status: 1,
 
                 },
             })
@@ -107,7 +113,7 @@ export class UserController {
             const oPerson = await PersonModel.findOne({
                 where: {
                     document: document,
-                    status: 1,
+                    // status: 1,
                     idPerson: { [Op.not]: id },
                 },
             });
@@ -133,7 +139,10 @@ export class UserController {
                     updateDate: new Date()
                 },
                 {
-                    where: { idPerson: id, status: 1 },
+                    where: {
+                        idPerson: id,
+                        // status: 1
+                    },
                     transaction
                 },
 
@@ -182,7 +191,7 @@ export class UserController {
             const oPersonValidate = await PersonModel.findOne({
                 where: {
                     idPerson: id,
-                    status: 1,
+                    // status: 1,
 
                 },
             })
@@ -200,18 +209,18 @@ export class UserController {
                 });
             }
 
-            await PersonModel.update(
-                {
-                    status: 0,
-                    deletedBy: idUser,
-                    deletionDate: new Date()
-                },
-                {
-                    where: { idPerson: id, status: 1 },
-                    transaction
-                },
+            // await PersonModel.update(
+            //     {
+            //         status: 0,
+            //         deletedBy: idUser,
+            //         deletionDate: new Date()
+            //     },
+            //     {
+            //         where: { idPerson: id, status: 1 },
+            //         transaction
+            //     },
 
-            )
+            // )
 
             await UserModel.update(
                 {

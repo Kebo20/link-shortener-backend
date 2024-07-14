@@ -1,17 +1,17 @@
 import { UserAttributes } from '../interfaces/user';
 import UserModel from '../models/user'
-import { Op, Transaction } from "sequelize";
+import { Op, Transaction } from 'sequelize';
 import { HttpError } from '../utils/handleError'
 
 
 export class UserService {
 
 
-    static existByEmailOrUsername = async ({ userName, email }: { userName: string; email: string }): Promise<boolean> => {
+    static existByEmailOrUsername = async ({ userName, email }: { userName: string; email: string }): Promise<number> => {
 
 
         try {
-            const oUser = await UserModel.findOne({
+            const oUser = await UserModel.count({
                 where: {
                     [Op.or]: [
                         { userName },
@@ -21,11 +21,23 @@ export class UserService {
                 },
             });
 
-            return !!oUser
+            // if (oUser) {
+            //     throw new HttpError({
+            //         code: 'BAD_REQUEST',
+            //         message: 'Usuario ya registrado',
+            //     });
+            // }
+            if (oUser > 0) {
+                throw new HttpError({
+                    code: 'BAD_REQUEST',
+                    message: 'Usuario ya registrado..',
+                });
+            }
+
+            return oUser
 
         } catch (error) {
-
-            return false
+            throw new Error('Usuario ya registrado');
         }
     }
 

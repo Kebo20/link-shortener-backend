@@ -1,4 +1,4 @@
-import { Op, Transaction } from "sequelize";
+import { Op, Transaction } from 'sequelize';
 import PersonModel from "../models/person";
 import { PersonAttributes } from "../interfaces/person";
 import { sequelize } from '../config/db'

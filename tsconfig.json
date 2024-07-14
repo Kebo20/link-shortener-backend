@@ -12,7 +12,8 @@
     "resolveJsonModule": true, // Permite importar módulos JSON
     "allowSyntheticDefaultImports": true, // Permite la importación de módulos con default imports sintéticos
     "experimentalDecorators": true, // Habilita el uso de decoradores experimentales
-    "emitDecoratorMetadata": true // Emite metadatos para los decoradores
+    "emitDecoratorMetadata": true, // Emite metadatos para los decoradores
+    // "strictNullChecks": true,
   },
   "include": [
     "src/**/*.ts"

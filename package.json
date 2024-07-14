@@ -4,8 +4,9 @@
   "description": "Plantilla API's",
   "main": "src/app.ts",
   "scripts": {
-    "dev": "ts-node src/app.ts",
-    "server": "nodemon ./src/app.ts",
+    "dev-old": "ts-node src/app.ts",
+    "dev": "ts-node source/app.ts",
+    "server": "nodemon ./source/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -16,6 +17,8 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/kebo-dev/api-node#readme",
   "dependencies": {
+    "@sequelize/core": "^7.0.0-alpha.41",
+    "@sequelize/mysql": "^7.0.0-alpha.41",
     "bcrypt": "5.1.1",
     "cors": "2.8.5",
     "dotenv": "16.4.2",
@@ -25,7 +28,8 @@
     "jsonwebtoken": "9.0.2",
     "luxon": "3.4.4",
     "mysql2": "3.9.1",
-    "sequelize": "6.37.0",
+    "sequelize": "6.37.3",
+    "sequelize-typescript": "2.1.6",
     "zod": "3.22.4"
   },
   "devDependencies": {
