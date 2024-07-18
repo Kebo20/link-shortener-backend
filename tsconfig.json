@@ -8,7 +8,7 @@
     "strict": true, // Habilita todas las verificaciones estrictas
     "skipLibCheck": true, // Omite la comprobación de tipos de archivos de declaración
     "outDir": "./dist", // Directorio de salida para los archivos compilados
-    "rootDir": "./src", // Directorio raíz de tu proyecto
+    "rootDir": "./source", // Directorio raíz de tu proyecto
     "resolveJsonModule": true, // Permite importar módulos JSON
     "allowSyntheticDefaultImports": true, // Permite la importación de módulos con default imports sintéticos
     "experimentalDecorators": true, // Habilita el uso de decoradores experimentales
@@ -16,7 +16,8 @@
     // "strictNullChecks": true,
   },
   "include": [
-    "src/**/*.ts"
+    // "src/**/*.ts",
+    "source/**/**/*.ts"
   ], // Incluye todos los archivos .ts en el directorio src
   "exclude": [
     "node_modules"

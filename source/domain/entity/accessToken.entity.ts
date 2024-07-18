@@ -1,6 +1,6 @@
-export interface AccessTokenAttributes {
+export interface AccessTokenEntity {
 
-    id?: string
+    id?: number
     idUser: string
     token: string
     namespace?: string

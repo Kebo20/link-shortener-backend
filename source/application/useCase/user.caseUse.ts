@@ -6,8 +6,8 @@ export class UserUseCase {
     constructor(private readonly userRepository: UserRepositoryI) { }
 
     public registerUser = async (data: UserEntity) => {
-        const userValue = new UserValue(data);
-        const userCreated = await this.userRepository.register(userValue);
+        // const userValue = new UserValue(data);
+        const userCreated = await this.userRepository.register(data);
         return userCreated
     }
 
