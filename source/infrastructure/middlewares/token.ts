@@ -1,11 +1,10 @@
 import { HttpError } from '../utils/handleError';
-import AccessTokenAttributes from '../models/accessToken';
+import { AccessTokenModel } from '../model/accessToken';
 import jwt from 'jsonwebtoken'
 import { NextFunction, Request, Response } from "express";
 
 export const validateToken = async (req: Request, res: Response, next: NextFunction) => {
 
-    console.log(req.headers)
     try {
 
         const token = req.headers['x-access-token'];
@@ -18,7 +17,7 @@ export const validateToken = async (req: Request, res: Response, next: NextFunct
 
         const decoded = jwt.verify(`${token}`, JWT_SECRET);
 
-        const accessToken = await AccessTokenAttributes.findOne({ where: { token, revoked: 0 } });
+        const accessToken = await AccessTokenModel.findOne({ where: { token, revoked: 0 } });
         if (!accessToken) {
             throw new HttpError({
                 code: 'UNAUTHORIZED',

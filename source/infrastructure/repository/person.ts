@@ -6,12 +6,21 @@ import { PersonEntity } from "../../domain/entity/person.entity";
 
 
 export class PersonRepository implements PersonRepositoryI {
+    async findById(id: string): Promise<PersonEntity | null> {
+        const oPerson = await PersonModel.findByPk(id)
+        return oPerson
+    }
     async register(personEntity: PersonEntity): Promise<PersonEntity> {
         const newPerson = await PersonModel.create(personEntity)
         return newPerson
     }
-    update(personEntity: PersonEntity): Promise<PersonEntity> {
-        throw new Error("Method not implemented.");
+    async update(personEntity: PersonEntity): Promise<number> {
+        const newPerson = await PersonModel.update(personEntity, {
+            where: {
+                idPerson: personEntity.idPerson,
+            }
+        },)
+        return newPerson[0]
     }
     delete(idUser: string): Promise<PersonEntity> {
         throw new Error("Method not implemented.");
@@ -19,30 +28,17 @@ export class PersonRepository implements PersonRepositoryI {
     list(): Promise<PersonEntity[]> {
         throw new Error("Method not implemented.");
     }
-    async existByDocument(document: string): Promise<number> {
-        try {
-            const oPerson = await PersonModel.count({
-                where: {
-                    document: document,
-                },
-            });
+    async findByDocument(document: string): Promise<PersonEntity | null> {
 
-            if (oPerson > 0) {
-                throw new HttpError({
-                    code: 'BAD_REQUEST',
-                    message: 'Persona ya registrada.',
-                });
-            }
+        const oPerson = await PersonModel.findOne({
+            where: {
+                document: document,
+            },
+        });
 
-            return oPerson
+        return oPerson
 
-        } catch (error: any) {
-            if (error instanceof HttpError) {
-                throw error; // Si el error es de tipo HttpError, lo relanzamos
-            } else {
-                throw new Error(String(error)); // Convertimos a string el error desconocido y lo lanzamos
-            }
-        }
+
     }
 
 }

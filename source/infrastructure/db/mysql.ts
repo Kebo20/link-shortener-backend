@@ -1,5 +1,8 @@
 // import { Sequelize } from "sequelize";
 import { Sequelize } from 'sequelize-typescript';
+import cls from 'cls-hooked'
+export const namespace = cls.createNamespace('transaction-namespace');
+Sequelize.useCLS(namespace);
 
 
 export const sequelize = new Sequelize(`${process.env.DB_NAME}`, `${process.env.DB_USER}`, `${process.env.DB_PASSWORD}`, {

@@ -1,158 +1,83 @@
-import { DataTypes, Model, Optional } from 'sequelize';
+import { Table, Column, Model, DataType, Default, PrimaryKey, IsUUID, HasOne } from 'sequelize-typescript';
+import UserModel from './user'; // Asegúrate de ajustar la ruta según tu estructura de proyecto
 import { sequelize } from '../db/mysql';
 import { PersonEntity } from '../../domain/entity/person.entity';
 
-
-// export const PersonModel = sequelize.define(
-//     'persons',
-//     {
-//         idPerson: {
-//             type: DataTypes.UUID,
-//             defaultValue: DataTypes.UUIDV4,
-//             primaryKey: true,
-//         },
-//         firstName: {
-//             type: DataTypes.STRING,
-//         },
-//         lastName: {
-//             type: DataTypes.STRING,
-//         },
-//         fullName: {
-//             type: DataTypes.STRING,
-//         },
-//         sex: {
-//             type: DataTypes.ENUM('F', 'M'),
-//         },
-//         email: {
-//             type: DataTypes.STRING,
-//         },
-//         address: {
-//             type: DataTypes.STRING,
-//         },
-//         birthDate: {
-//             type: DataTypes.DATE,
-//             // get() {
-//             //     return sequelize.Sequelize.fn('DATE_FORMAT', sequelize.Sequelize.col('birthDate'), '%Y-%m-%d %H:%i:%s');
-//             // }
-//         },
-//         document: {
-//             type: DataTypes.STRING,
-//         },
-//         phone: {
-//             type: DataTypes.STRING,
-//         },
-//         status: {
-//             type: DataTypes.TINYINT,
-//         },
-//         createdBy: {
-//             type: DataTypes.STRING,
-//         },
-//         updatedBy: {
-//             type: DataTypes.STRING,
-//         },
-//         deletedBy: {
-//             type: DataTypes.STRING,
-//         },
-//         creationDate: {
-//             type: DataTypes.DATE,
-//             defaultValue: sequelize.Sequelize.literal('CURRENT_TIMESTAMP'),
-//         },
-//         updateDate: {
-//             type: DataTypes.DATE,
-//             defaultValue: sequelize.Sequelize.literal('CURRENT_TIMESTAMP'),
-//         },
-//         deletionDate: {
-//             type: DataTypes.DATE,
-//         },
-//     }, {
-//     timestamps: false,
-//     freezeTableName: true,
-// }
-// )
-// export default PersonModel;
-
-// Definir una interfaz para los atributos opcionales durante la creación
-interface PersonCreationAttributes extends Optional<PersonEntity, 'idPerson' | 'creationDate' | 'updateDate'> { }
-
-// Crear la clase de modelo extendiendo `Model`
-class PersonModel extends Model<PersonEntity, PersonCreationAttributes> implements PersonEntity {
-    public idPerson!: string;
-    public firstName!: string;
-    public lastName!: string;
-    public fullName!: string;
-    public sex!: 'F' | 'M';
-    public email!: string;
-    public address!: string;
-    public birthDate!: Date;
-    public document!: string;
-    public phone!: string;
-    public status!: number;
-    public createdBy!: string;
-    public updatedBy!: string;
-    public deletedBy!: string;
-    public creationDate!: Date;
-    public updateDate!: Date;
-    public deletionDate?: Date;
-}
-
-// Definir el modelo usando la clase
-PersonModel.init({
-    idPerson: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
-        primaryKey: true,
-    },
-    firstName: {
-        type: DataTypes.STRING,
-    },
-    lastName: {
-        type: DataTypes.STRING,
-    },
-    fullName: {
-        type: DataTypes.STRING,
-    },
-    sex: {
-        type: DataTypes.ENUM('F', 'M'),
-    },
-    email: {
-        type: DataTypes.STRING,
-    },
-    address: {
-        type: DataTypes.STRING,
-    },
-    birthDate: {
-        type: DataTypes.DATE,
-        // get() {
-        //     return sequelize.Sequelize.fn('DATE_FORMAT', sequelize.Sequelize.col('birthDate'), '%Y-%m-%d %H:%i:%s');
-        // }
-    },
-    document: {
-        type: DataTypes.STRING,
-    },
-    phone: {
-        type: DataTypes.STRING,
-    },
-
-    createdBy: {
-        type: DataTypes.STRING,
-    },
-    updatedBy: {
-        type: DataTypes.STRING,
-    },
-
-    creationDate: {
-        type: DataTypes.DATE,
-        defaultValue: sequelize.Sequelize.literal('CURRENT_TIMESTAMP'),
-    },
-    updateDate: {
-        type: DataTypes.DATE,
-        defaultValue: sequelize.Sequelize.literal('CURRENT_TIMESTAMP'),
-    }
-}, {
-    sequelize,
+@Table({
     tableName: 'persons',
     timestamps: false,
-    freezeTableName: true,
-});
+    freezeTableName: true
+
+})
+export class PersonModel extends Model<PersonModel, PersonEntity> implements PersonEntity {
+    @IsUUID(4)
+    @PrimaryKey
+    @Default(DataType.UUIDV4)
+    @Column(DataType.UUID)
+    idPerson!: string;
+
+    @Column(DataType.STRING)
+    firstName!: string;
+
+    @Column(DataType.STRING)
+    lastName!: string;
+
+    @Column(DataType.STRING)
+    fullName!: string;
+
+    @Column(DataType.ENUM('F', 'M'))
+    sex!: 'F' | 'M';
+
+    @Column(DataType.STRING)
+    email!: string;
+
+    @Column(DataType.STRING)
+    address!: string;
+
+    @Column(DataType.DATE)
+    birthDate!: Date;
+
+    @Column(DataType.STRING)
+    document!: string;
+
+    @Column(DataType.STRING)
+    phone!: string;
+
+    @Column(DataType.TINYINT)
+    status!: number;
+
+    @Column(DataType.STRING)
+    createdBy!: string;
+
+    @Column(DataType.STRING)
+    updatedBy!: string;
+
+    @Column(DataType.STRING)
+    deletedBy!: string;
+
+    @Default(DataType.NOW)
+    @Column(DataType.DATE)
+    creationDate!: Date;
+
+    @Default(DataType.NOW)
+    @Column(DataType.DATE)
+    updateDate!: Date;
+
+    @Column(DataType.DATE)
+    deletionDate?: Date;
+
+    // @HasOne(() => UserModel)
+    // public user!: UserModel;
+
+    getFormattedBirthDate(): string {
+        const date = new Date(this.birthDate);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${day}/${month}/${year}`;
+    }
+}
+
+sequelize.addModels([PersonModel]);
 
 export default PersonModel;

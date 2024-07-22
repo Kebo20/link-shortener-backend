@@ -1,4 +1,4 @@
-import { Table, Column, Model, PrimaryKey, DataType, Default, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import { Table, Column, Model, PrimaryKey, DataType, Default, ForeignKey, BelongsTo, IsUUID } from 'sequelize-typescript';
 import { Optional } from 'sequelize';
 import { sequelize } from '../db/mysql';
 import PersonModel from './person';
@@ -14,9 +14,11 @@ import { UserEntity } from '../../domain/entity/user.entity';
 // class UserModel extends Model<UserEntity, UserCreationAttributes> implements UserEntity {
 class UserModel extends Model<UserModel, UserEntity> implements UserEntity {
 
+    @IsUUID(4)
     @PrimaryKey
     @Default(DataType.UUIDV4)
     @Column(DataType.UUID)
+    @ForeignKey(() => PersonModel) // Define la clave foránea
     public idUser!: string;
 
     @Column(DataType.STRING)
@@ -65,6 +67,13 @@ class UserModel extends Model<UserModel, UserEntity> implements UserEntity {
 
     @Column(DataType.DATE)
     public deletionDate!: Date;
+
+    @BelongsTo(() => PersonModel)
+    public person!: PersonModel;
 }
 
+// UserModel.belongsTo(PersonModel, { foreignKey: 'idUser' });
+
+// Luego, debes agregar el modelo a la instancia de sequelize
+sequelize.addModels([UserModel]);
 export default UserModel;

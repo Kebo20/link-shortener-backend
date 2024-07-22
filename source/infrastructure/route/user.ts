@@ -1,5 +1,5 @@
 import express from "express";
-import { validatorRegisterUser, validatorUpdateUser, validatorDeleteUser } from '../middlewares/user'
+import { validatorRegisterUser, validatorUpdateUser, validatorDeleteUser, validatorGetUser } from '../middlewares/user'
 import { validateToken } from '../middlewares/token'
 
 import { UserController } from '../controller/user'
@@ -30,10 +30,11 @@ const personUseCase = new PersonUseCase(personRepo)
 
 const userController = new UserController(userUseCase, personUseCase)
 
-// router.get('/', userController.list)
-router.post('/', validatorRegisterUser, userController.register)
-// router.put('/:id', validatorUpdateUser, userController.update)
-// router.delete('/:id', validatorDeleteUser, userController.delete)
+router.get('/', validateToken, userController.list)
+router.get('/:id', validateToken, validatorGetUser, userController.get)
+router.post('/', validateToken, validatorRegisterUser, userController.register)
+router.put('/:id', validateToken, validatorUpdateUser, userController.update)
+router.delete('/:id', validateToken, validatorDeleteUser, userController.delete)
 
 
 

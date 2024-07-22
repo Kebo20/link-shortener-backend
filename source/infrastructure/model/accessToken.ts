@@ -6,7 +6,7 @@ import {
     AutoIncrement,
     DataType,
 } from 'sequelize-typescript';
-// import { sequelize } from '../db/mysql';
+import { sequelize } from '../db/mysql';
 import { AccessTokenEntity } from '../../domain/entity/accessToken.entity';
 
 @Table({
@@ -44,6 +44,6 @@ export class AccessTokenModel extends Model<AccessTokenModel> implements AccessT
 }
 
 // Luego, debes agregar el modelo a la instancia de sequelize
-// sequelize.addModels([AccessTokenModel]);
+sequelize.addModels([AccessTokenModel]);
 
 export default AccessTokenModel;
