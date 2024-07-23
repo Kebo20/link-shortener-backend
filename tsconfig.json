@@ -17,7 +17,8 @@
   },
   "include": [
     // "src/**/*.ts",
-    "source/**/**/*.ts"
+    "source/**/**/*.ts",
+    // "source/swagger/*.ts"
   ], // Incluye todos los archivos .ts en el directorio src
   "exclude": [
     "node_modules"

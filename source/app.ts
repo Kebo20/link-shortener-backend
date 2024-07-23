@@ -3,6 +3,7 @@ import 'dotenv/config'
 import { corsMiddleware } from './infrastructure/middlewares/cors'
 import { routerExpress } from './infrastructure/route/index'
 import { errorHandler } from "./infrastructure/utils/handleError";
+import { swagger } from "./swagger/index"
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 process.env.TZ = 'America/Lima';
@@ -23,6 +24,8 @@ const limiter = rateLimit({
         message: 'Has excedido el límite de solicitudes. Inténtalo de nuevo más tarde.',
     }
 });
+
+swagger('/swagger', app)
 
 app.use(limiter)
 app.use('/v1', routerExpress)
