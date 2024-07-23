@@ -1,239 +1,34 @@
-openapi: 3.0.1
+openapi: 3.1.0
 info:
-  title: ITEPREVENGO Mobile General
-  description: Servicio que permite obtener datos generales de un cliente de iteprevengo.
-  contact:
-    name: Joel Fernandez
+  title: Webhook Example
   version: 1.0.0
-servers:
-  - url: /v1
-tags:
-  - name: General
-    description: Apis generales
-paths:
-  /colaborators:
-    get:
-      tags:
-        - General
-      summary: Obtiene la lista de empleados de un cliente
-      description: Obtiene la lista de empleados de un cliente
-      parameters:
-        - $ref: "#/components/parameters/x-access-token"
+# Since OAS 3.1.0 the paths element isn't necessary. Now a valid OpenAPI Document can describe only paths, webhooks, or even only reusable components
+webhooks:
+  # Each webhook needs a name
+  newPet:
+    # This is a Path Item Object, the only difference is that the request is initiated by the API provider
+    post:
+      requestBody:
+        description: Information about a new pet in the system
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Pet"
       responses:
         "200":
-          description: OK
-          headers:
-            x-correlator:
-              description: Correlation id for the different services
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ListInspectionsWeeklyResponse"
-
-        "400":
-          description: Problem with the client request
-          headers:
-            x-correlator:
-              description: Correlation id for the different services
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InvalidArgument"
-              example:
-                code: INVALID_ARGUMENT
-                message: >-
-                  Client specified an invalid argument, request body o query
-                  param
-        "403":
-          description: Client does not have sufficient permission
-          headers:
-            x-correlator:
-              description: Correlation id for the different services
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PermissionDenied"
-              example:
-                code: PERMISSION_DENIED
-                message: >-
-                  Authenticated user has no permission to access the requested
-                  resource
-        "404":
-          description: Resource not found
-          headers:
-            x-correlator:
-              description: Correlation id for the different services
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/NotFound"
-              example:
-                code: NOT_FOUND
-                message: A specified resource is not found
-        "500":
-          description: Server error
-          headers:
-            x-correlator:
-              description: Correlation id for the different services
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Internal"
-              example:
-                code: INTERNAL
-                message: Server error
-        "504":
-          description: >-
-            Request timeout exceeded. If it happens repeatedly, consider
-            reducing the request complexity
-          headers:
-            x-correlator:
-              description: Correlation id for the different services
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Timeout"
-              example:
-                code: TIMEOUT
-                message: Request timeout exceeded. Try it later
-      x-fp-pi-scopes:
-        - invoicing-phone-number-read
+          description: Return a 200 status to indicate that the data was received successfully
 
 components:
-  parameters:
-    x-access-token:
-      in: header
-      schema:
-        type: string
-      name: x-access-token
-      description: Token de session
   schemas:
-    ListInspectionsWeeklyResponse:
-      type: object
-      properties:
-        idUser:
-          type: number
-          description: Id del usuario
-          example: 1
-        document:
-          type: string
-          description: Documento de Identidad
-          example: "12345678"
-        fullName:
-          type: string
-          description: Nombres y Apellidos
-          example: "Juan Perez Gonzales"
-        email:
-          type: string
-          description: Nombres y Apellidos
-          example: "juanperez@empresa.com"
-        idGroup:
-          type: number
-          description: Id del perfil
-          example: 1
-        groupName:
-          type: string
-          description: Perfil
-          example: "Supervisor"
-        companyName:
-          type: string
-          example: "P&M SUPPORT S.R.L."
-        url:
-          type: string
-          example: "staging.iteprevengo.com"
-    InvalidArgument:
-      allOf:
-        - required:
-            - code
-          type: object
-          properties:
-            code:
-              type: string
-              description: >-
-                Client specified an invalid argument, request body or query
-                param.
-              default: INVALID_ARGUMENT
-              enum:
-                - INVALID_ARGUMENT
-        - $ref: "#/components/schemas/ModelError"
-    ModelError:
+    Pet:
       required:
-        - message
-      type: object
+        - id
+        - name
       properties:
-        message:
+        id:
+          type: integer
+          format: int64
+        name:
           type: string
-          description: A human readable description of what the event represent
-    PermissionDenied:
-      allOf:
-        - required:
-            - code
-          type: object
-          properties:
-            code:
-              type: string
-              description: >-
-                Client does not have sufficient permissions to perform this
-                action.
-              default: PERMISSION_DENIED
-              enum:
-                - PERMISSION_DENIED
-        - $ref: "#/components/schemas/ModelError"
-    NotFound:
-      allOf:
-        - required:
-            - code
-          type: object
-          properties:
-            code:
-              type: string
-              description: The specified resource is not found
-              default: NOT_FOUND
-              enum:
-                - NOT_FOUND
-        - $ref: "#/components/schemas/ModelError"
-    Internal:
-      allOf:
-        - required:
-            - code
-          type: object
-          properties:
-            code:
-              type: string
-              description: Unknown server error.Typically a server bug.
-              default: INTERNAL
-              enum:
-                - INTERNAL
-        - $ref: "#/components/schemas/ModelError"
-    Timeout:
-      allOf:
-        - required:
-            - code
-          type: object
-          properties:
-            code:
-              type: string
-              description: Request timeout exceeded
-              default: TIMEOUT
-              enum:
-                - TIMEOUT
-        - $ref: "#/components/schemas/ModelError"
-
-x-version-control:
-  1.0.0:
-    date: 25/04/2022
-    editor: Joel Fernandez
-    description: First version
-    changes: []
+        tag:
+          type: string
