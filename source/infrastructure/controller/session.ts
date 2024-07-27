@@ -19,7 +19,6 @@ export class SessionController {
 
     login = async (req: Request, res: Response, next: NextFunction) => {
 
-        const transaction = await sequelize.transaction();
 
         try {
 
@@ -42,9 +41,7 @@ export class SessionController {
 
 
         } catch (error) {
-            if (transaction) {
-                await transaction.rollback();
-            }
+
             next(error);
         }
 
