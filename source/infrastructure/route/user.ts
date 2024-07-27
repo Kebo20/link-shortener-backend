@@ -6,8 +6,8 @@ import { UserController } from '../controller/user'
 import { UserRepository } from "../repository/user";
 import { PersonRepository } from "../repository/person";
 
-import { UserUseCase } from "../../application/useCase/user.caseUse";
-import { PersonUseCase } from "../../application/useCase/person.caseUse";
+import { UserUseCase } from "../../application/useCase/user.useCase";
+import { PersonUseCase } from "../../application/useCase/person.useCase";
 
 
 export const router = express.Router()
@@ -35,6 +35,7 @@ router.get('/:id', validateToken, validatorGetUser, userController.get)
 router.post('/', validateToken, validatorRegisterUser, userController.register)
 router.put('/:id', validateToken, validatorUpdateUser, userController.update)
 router.delete('/:id', validateToken, validatorDeleteUser, userController.delete)
+router.post('/pdf', validateToken, userController.pdf)
 
 
 

@@ -34,7 +34,7 @@ const errorHandler = (err: HttpError, req: Request, res: Response, next: NextFun
     let code = err.code ?? 'INTERNAL_SERVER'
 
     const statusCode = TableCodes[code]
-    res.status(statusCode).json({ code, message: validateJson(err.message) });
+    res.status(statusCode).json({ code, message: validateJson(err.message ?? err) });
 };
 
 

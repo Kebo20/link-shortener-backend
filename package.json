@@ -20,6 +20,7 @@
   "dependencies": {
     "@sequelize/core": "^7.0.0-alpha.41",
     "@sequelize/mysql": "^7.0.0-alpha.41",
+    "@types/pdfkit": "^0.13.4",
     "bcrypt": "5.1.1",
     "cls-hooked": "4.2.2",
     "cors": "2.8.5",
@@ -30,6 +31,7 @@
     "jsonwebtoken": "9.0.2",
     "luxon": "3.4.4",
     "mysql2": "3.9.1",
+    "pdfkit": "^0.15.0",
     "reflect-metadata": "0.2.2",
     "sequelize": "6.37.3",
     "sequelize-typescript": "2.1.6",

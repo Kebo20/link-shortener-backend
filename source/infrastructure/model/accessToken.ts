@@ -9,12 +9,13 @@ import {
 import { sequelize } from '../db/mysql';
 import { AccessTokenEntity } from '../../domain/entity/accessToken.entity';
 
+
 @Table({
     tableName: 'it_access_tokens',
     timestamps: false,
     freezeTableName: true,
 })
-export class AccessTokenModel extends Model<AccessTokenModel> implements AccessTokenEntity {
+export class AccessTokenModel extends Model<AccessTokenModel, AccessTokenEntity> implements AccessTokenEntity {
 
     @PrimaryKey
     @AutoIncrement
@@ -27,8 +28,6 @@ export class AccessTokenModel extends Model<AccessTokenModel> implements AccessT
     @Column(DataType.STRING)
     token!: string;
 
-    @Column(DataType.STRING)
-    namespace!: string;
 
     @Column(DataType.TINYINT)
     revoked!: number;
