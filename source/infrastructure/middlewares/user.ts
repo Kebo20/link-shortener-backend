@@ -1,7 +1,6 @@
 import z from 'zod'
 import { HttpError } from '../utils/handleError';
 import { NextFunction, Request, Response } from "express";
-import { off } from 'process';
 
 export const validatorRegisterUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -37,7 +36,7 @@ export const validatorRegisterUser = async (req: Request, res: Response, next: N
         if (!resultValidateData.success) {
             throw new HttpError({
                 code: 'BAD_REQUEST',
-                message: JSON.parse(resultValidateData.error.message),
+                message: resultValidateData.error.message,
             });
         } else {
             res.locals.body = resultValidateData.data
@@ -128,7 +127,7 @@ export const validatorGetUser = async (req: Request, res: Response, next: NextFu
 
             throw new HttpError({
                 code: 'BAD_REQUEST',
-                message: JSON.parse(resultValidateData.error.message),
+                message: resultValidateData.error.message,
             });
         } else {
             res.locals.body = resultValidateData.data

@@ -16,7 +16,7 @@ export const validatorLogin = async (req: Request, res: Response, next: NextFunc
         if (!resultValidateData.success) {
             throw new HttpError({
                 code: 'BAD_REQUEST',
-                message: JSON.parse(resultValidateData.error.message),
+                message: resultValidateData.error.message,
             });
         } else {
             res.locals.body = resultValidateData.data

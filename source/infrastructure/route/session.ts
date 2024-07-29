@@ -3,11 +3,6 @@ import { validatorLogin } from '../middlewares/session'
 import { validateToken } from '../middlewares/token'
 
 import { SessionController } from '../controller/session'
-import { UserRepository } from "../repository/user";
-import { PersonRepository } from "../repository/person";
-
-import { UserUseCase } from "../../application/useCase/user.useCase";
-import { PersonUseCase } from "../../application/useCase/person.useCase";
 import { SessionRepository } from "../repository/session";
 import { SessionUseCase } from "../../application/useCase/session.useCase";
 
