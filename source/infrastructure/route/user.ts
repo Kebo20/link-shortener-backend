@@ -1,6 +1,8 @@
 import express from "express";
 import { validatorRegisterUser, validatorUpdateUser, validatorDeleteUser, validatorGetUser } from '../middlewares/user'
 import { validateToken } from '../middlewares/token'
+import { validatorPermissions } from '../middlewares/authorization'
+
 
 import { UserController } from '../controller/user'
 import { UserRepository } from "../repository/user";
@@ -30,12 +32,12 @@ const personUseCase = new PersonUseCase(personRepo)
 
 const userController = new UserController(userUseCase, personUseCase)
 
-router.get('/', validateToken, userController.list)
-router.get('/:id', validateToken, validatorGetUser, userController.get)
-router.post('/', validateToken, validatorRegisterUser, userController.register)
-router.put('/:id', validateToken, validatorUpdateUser, userController.update)
-router.delete('/:id', validateToken, validatorDeleteUser, userController.delete)
-router.post('/pdf', validateToken, userController.pdf)
+router.get('/', validateToken, validatorPermissions('user'), userController.list)
+router.get('/:id', validateToken, validatorPermissions('user'), validatorGetUser, userController.get)
+router.post('/', validateToken, validatorPermissions('user'), validatorRegisterUser, userController.register)
+router.put('/:id', validateToken, validatorPermissions('user'), validatorUpdateUser, userController.update)
+router.delete('/:id', validateToken, validatorPermissions('user'), validatorDeleteUser, userController.delete)
+router.post('/pdf', validateToken, validatorPermissions('user'), userController.pdf)
 
 
 

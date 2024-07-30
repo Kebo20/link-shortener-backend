@@ -53,7 +53,7 @@ const errorHandler = (err: HttpError, req: Request, res: Response, next: NextFun
         ipAdress: req.ip
     })
 
-    res.status(statusCode).json({ code, message: statusCode < 500 ? errorMessage : idLog });
+    res.status(statusCode).json({ code, message: statusCode < 500 ? errorMessage : 'Ocurrió un error en el sistema', ID: idLog });
 
 
 };
