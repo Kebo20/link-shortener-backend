@@ -4,10 +4,10 @@ import { v4 as uuidv4 } from 'uuid';
 
 // Configuración del transporte para rotación diaria de archivos
 const transportFile = new winston.transports.DailyRotateFile({
-    filename: 'logs/%DATE%-app.json', // Nombre del archivo con patrón de fecha
+    filename: 'logs/%DATE%.json', // Nombre del archivo con patrón de fecha
     datePattern: 'YYYY-MM-DD', // Patrón de fecha para los archivos
     maxSize: '20m', // Tamaño máximo del archivo antes de rotar
-    maxFiles: '14d', // Número de días para guardar archivos rotados
+    // maxFiles: '14d', // Número de días para guardar archivos rotados
     format: winston.format.combine(
         // winston.format.timestamp({
         //     format: 'YYYY-MM-DD HH:mm:ss' // Formato personalizado para este transport
