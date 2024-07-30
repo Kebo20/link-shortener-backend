@@ -1,6 +1,5 @@
 import winston from 'winston';
 import 'winston-daily-rotate-file';
-import { v4 as uuidv4 } from 'uuid';
 
 // Configuración del transporte para rotación diaria de archivos
 const transportFile = new winston.transports.DailyRotateFile({
@@ -52,12 +51,16 @@ interface dataLog {
     ipAdress?: string,
     headers: object
 }
-
+const generateCustomId = () => {
+    const prefix = 'LOG';
+    const uniquePart = `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+    return `${prefix}-${uniquePart}`;
+};
 export const saveLog = (data: dataLog) => {
 
     const { message, ...oData } = data
     const { statusCode } = data
-    const idLog = uuidv4()
+    const idLog = generateCustomId()
     const logData = { ...oData, idLog }
 
 
