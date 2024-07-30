@@ -1,3 +1,5 @@
+import { saveLog } from './logger';
+
 interface TableCodes {
     [key: string]: number;
 }
@@ -32,9 +34,28 @@ import { Request, Response, NextFunction } from 'express';
 
 const errorHandler = (err: HttpError, req: Request, res: Response, next: NextFunction) => {
     let code = err.code ?? 'INTERNAL_SERVER'
-
     const statusCode = TableCodes[code]
-    res.status(statusCode).json({ code, message: validateJson(err.message ?? err) });
+    const errorMessage = validateJson(err.message ?? err)
+
+    const { idLog } = saveLog({
+        message: errorMessage,
+        stack: err.stack,
+        path: req.path,
+        method: req.method,
+        code: code,
+        statusCode: statusCode,
+        body: req.body,
+        query: req.query,
+        params: req.params,
+        locals: res.locals,
+        headers: req.headers,
+        userAgent: req.headers['user-agent'],
+        ipAdress: req.ip
+    })
+
+    res.status(statusCode).json({ code, message: statusCode < 500 ? errorMessage : idLog });
+
+
 };
 
 

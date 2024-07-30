@@ -64,7 +64,7 @@ export class UserController {
                 const newDataPerson: PersonEntity = { idPerson: id, email, document, firstName, lastName, fullName: firstName + ' ' + lastName, sex, phone, address, birthDate, createdBy: idUser, creationDate: new Date(), updatedBy: idUser }
                 await this.personUseCase.updatePerson(newDataPerson)
 
-                const newDataUser: UserEntity = { idUser: id, userName, password: await bcrypt.hash(password, 10), email, createdBy: idUser, toChange: 0, status: 1, creationDate: new Date(), idGroup: 1, updatedBy: idUser }
+                const newDataUser: UserEntity = { idUser: id, userName, password: await bcrypt.hash(password, 10), email, createdBy: idUser, toChange: 0, status: 1, creationDate: new Date(), idGroup: 12, updatedBy: idUser }
                 await this.userUseCase.updateUser(newDataUser)
 
             })
