@@ -9,7 +9,10 @@ export const validateToken = async (req: Request, res: Response, next: NextFunct
 
         const token = req.headers['x-access-token'];
         if (!token) {
-            throw Error('Sesión inválida');
+            throw new HttpError({
+                code: 'UNAUTHORIZED',
+                message: 'Sesión inválida',
+            });
         }
 
 
