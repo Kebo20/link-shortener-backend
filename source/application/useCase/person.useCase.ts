@@ -3,10 +3,24 @@ import { PersonRepositoryI } from "../../domain/repository/person.repository";
 import { PersonValue } from "../../domain/value/person.value";
 import { HttpError } from '../../infrastructure/utils/handleError'
 
+interface registerDto {
+    idPerson?: string
+    firstName: string
+    lastName: string
+    sex: 'F' | 'M'
+    email: string
+    address: string
+    birthDate: Date
+    document: string
+    phone: string
+    createdBy: string
+
+}
+
 export class PersonUseCase {
     constructor(private readonly personRepository: PersonRepositoryI) { }
 
-    public registerPerson = async (data: PersonEntity) => {
+    public register = async (data: registerDto) => {
 
         const vPersonDocument = await this.personRepository.findByDocument(data.document)
 
@@ -16,7 +30,8 @@ export class PersonUseCase {
                 message: 'Documento ya registrado.',
             });
         }
-        const personCreated = await this.personRepository.register(data);
+        const registerData: PersonEntity = { ...data, fullName: data.firstName + ' ' + data.lastName, creationDate: new Date() }
+        const personCreated = await this.personRepository.register(registerData);
         return personCreated
     }
 
@@ -31,15 +46,15 @@ export class PersonUseCase {
     }
 
 
-    public updatePerson = async (data: PersonEntity) => {
-
+    public update = async (data: registerDto) => {
 
         const { idPerson, document } = data
+
         const vPersonId = await this.personRepository.findById(idPerson!)
 
         if (!vPersonId) {
             throw new HttpError({
-                code: 'BAD_REQUEST',
+                code: 'NOT_FOUND',
                 message: 'Usuario. Registro no encontrado.',
             });
         }
@@ -54,8 +69,8 @@ export class PersonUseCase {
             });
         }
 
-
-        const personUpdated = await this.personRepository.update(data);
+        const updateData: PersonEntity = { ...data, fullName: data.firstName + ' ' + data.lastName, creationDate: new Date() }
+        const personUpdated = await this.personRepository.update(updateData);
         return personUpdated
     }
 }

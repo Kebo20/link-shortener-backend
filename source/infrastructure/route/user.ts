@@ -10,6 +10,8 @@ import { PersonRepository } from "../repository/person";
 
 import { UserUseCase } from "../../application/useCase/user.useCase";
 import { PersonUseCase } from "../../application/useCase/person.useCase";
+import { SequelizeRepository } from "../repository/sequelizeTransaction";
+import { UserService } from "../../application/service/user.service";
 
 
 export const router = express.Router()
@@ -19,7 +21,7 @@ export const router = express.Router()
  */
 const userRepo = new UserRepository()
 const personRepo = new PersonRepository()
-
+const sequelizeRepository = new SequelizeRepository()
 
 /**
  * Iniciamos casos de uso
@@ -28,9 +30,14 @@ const personRepo = new PersonRepository()
 const userUseCase = new UserUseCase(userRepo)
 const personUseCase = new PersonUseCase(personRepo)
 
+/**
+ * Iniciamos Services
+ */
+
+const userService = new UserService(userUseCase, personUseCase, sequelizeRepository)
 
 
-const userController = new UserController(userUseCase, personUseCase)
+const userController = new UserController(userService)
 
 router.get('/', validateToken, validatorPermissions('user'), userController.list)
 router.get('/:id', validateToken, validatorPermissions('user'), validatorGetUser, userController.get)

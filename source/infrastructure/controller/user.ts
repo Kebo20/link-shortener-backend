@@ -1,9 +1,5 @@
-import UserModel from '../model/user'
-import PersonModel from '../model/person'
-import { Op } from "sequelize";
 
 import { sequelize, namespace } from '../db/mysql'
-import { HttpError } from '../utils/handleError'
 import bcrypt from 'bcrypt'
 import { NextFunction, Request, Response } from "express";
 import { UserUseCase } from '../../application/useCase/user.useCase';
@@ -16,9 +12,11 @@ import { UserEntity } from '../../domain/entity/user.entity';
 // import { PersonService } from '../services/person';
 import PDFDocument from 'pdfkit';
 import fs from 'fs';
+import { transcode } from 'buffer';
+import { UserService } from '../../application/service/user.service';
 export class UserController {
 
-    constructor(private userUseCase: UserUseCase, private personUseCase: PersonUseCase) {
+    constructor(private userService: UserService) {
     }
 
 
@@ -30,14 +28,8 @@ export class UserController {
             const { userName, password, email, document, firstName, lastName, sex, phone, address, birthDate } = res.locals.body;
             const { idUser } = res.locals.tokenResponse
 
-            await sequelize.transaction(async () => {
-
-                const newDataPerson: PersonEntity = { email, document, firstName, lastName, fullName: firstName + ' ' + lastName, sex, phone, address, birthDate, createdBy: idUser, creationDate: new Date() }
-                const newPerson = await this.personUseCase.registerPerson(newDataPerson)
-
-                const newDataUser: UserEntity = { idUser: newPerson.idPerson!, userName, password: await bcrypt.hash(password, 10), email, createdBy: idUser, toChange: 0, status: 1, creationDate: new Date(), idGroup: 1 }
-                await this.userUseCase.registerUser(newDataUser)
-            })
+            const newDataUser = { userName, email, createdBy: idUser, password, document, firstName, lastName, sex, phone, address, birthDate }
+            await this.userService.register(newDataUser)
 
 
             res.json({ message: 'Usuario registrado correctamente ' });
@@ -52,22 +44,17 @@ export class UserController {
     }
 
     update = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-
-
+        //DTO EN LOS USE CASE
+        //TRANSACCIONES EN UN REPOSITORY E IMPLEMENTRALOS
+        //usar service(por controller o modulo) para gestionar 2 o mas use case ??
+        //searchAll con criteria
         try {
 
             const { id, userName, password, email, document, firstName, lastName, sex, phone, address, birthDate } = res.locals.body;
             const { idUser } = res.locals.tokenResponse
 
-            await sequelize.transaction(async () => {
-
-                const newDataPerson: PersonEntity = { idPerson: id, email, document, firstName, lastName, fullName: firstName + ' ' + lastName, sex, phone, address, birthDate, createdBy: idUser, creationDate: new Date(), updatedBy: idUser }
-                await this.personUseCase.updatePerson(newDataPerson)
-
-                const newDataUser: UserEntity = { idUser: id, userName, password: await bcrypt.hash(password, 10), email, createdBy: idUser, toChange: 0, status: 1, creationDate: new Date(), idGroup: 12, updatedBy: idUser }
-                await this.userUseCase.updateUser(newDataUser)
-
-            })
+            const newDataUser = { idUser: id, userName, email, createdBy: idUser, password, document, firstName, lastName, sex, phone, address, birthDate }
+            await this.userService.update(newDataUser)
 
             res.json({ message: 'Usuario actualizado correctamente ' });
 
@@ -87,11 +74,9 @@ export class UserController {
 
             const { id } = res.locals.body;
             const { idUser } = res.locals.tokenResponse
-            await sequelize.transaction(async () => {
 
-                await this.userUseCase.delete({ idUser: id, deletedBy: idUser })
+            await this.userService.delete({ idUser: id, deletedBy: idUser })
 
-            })
             res.json({ message: 'Usuario eliminado correctamente ' });
 
         } catch (error) {
@@ -108,7 +93,7 @@ export class UserController {
 
         try {
 
-            const listUsers = await this.userUseCase.list()
+            const listUsers = await this.userService.list()
             res.json({ data: listUsers });
 
         } catch (error) {
@@ -127,7 +112,7 @@ export class UserController {
 
             const { id } = res.locals.body;
 
-            const findUser = await this.userUseCase.findById(id)
+            const findUser = await this.userService.findById(id)
 
 
             res.json({ data: findUser });

@@ -1,11 +1,22 @@
 import { UserEntity } from "../../domain/entity/user.entity";
 import { UserRepositoryI } from "../../domain/repository/user.repository";
 import { HttpError } from '../../infrastructure/utils/handleError'
+import bcrypt from 'bcrypt'
 
+interface registerDto {
+
+    idUser: string
+    userName: string
+    email: string
+    password: string
+    createdBy: string
+}
 export class UserUseCase {
     constructor(private readonly userRepository: UserRepositoryI) { }
 
-    public registerUser = async (data: UserEntity) => {
+
+
+    public register = async (data: registerDto) => {
         // const userValue = new UserValue(data);
         const { userName, email } = data
         const vUserEmail = await this.userRepository.findEmailOrUsername({ userName, email })
@@ -16,17 +27,18 @@ export class UserUseCase {
                 message: 'UserName o email ya registrado.',
             });
         }
-        const userCreated = await this.userRepository.register(data);
+
+        const dataRegister: UserEntity = { ...data, password: await bcrypt.hash(data.password, 10), toChange: 0, status: 1, creationDate: new Date(), idGroup: 1 }
+        const userCreated = await this.userRepository.register(dataRegister);
         return userCreated
     }
 
-    public updateUser = async (data: UserEntity) => {
-
+    public update = async (data: registerDto) => {
 
         const vUserId = await this.userRepository.findById(data.idUser)
         if (!vUserId) {
             throw new HttpError({
-                code: 'BAD_REQUEST',
+                code: 'NOT_FOUND',
                 message: 'Usuario. Registro no encontrado.',
             });
         }
@@ -42,7 +54,7 @@ export class UserUseCase {
         }
 
 
-        const userUpdated = await this.userRepository.update(data);
+        const userUpdated = await this.userRepository.update({ ...data, password: await bcrypt.hash(data.password, 10), toChange: 0, status: 1, creationDate: new Date(), idGroup: 1 });
         return userUpdated
     }
 
@@ -53,6 +65,13 @@ export class UserUseCase {
 
     public findById = async (id: string) => {
         const userFind = await this.userRepository.findById(id);
+
+        if (!userFind) {
+            throw new HttpError({
+                code: 'NOT_FOUND',
+                message: 'Usuario. Registro no encontrado.',
+            });
+        }
         return userFind
     }
 
@@ -68,7 +87,7 @@ export class UserUseCase {
         const vUserId = await this.userRepository.findById(idUser)
         if (!vUserId) {
             throw new HttpError({
-                code: 'BAD_REQUEST',
+                code: 'NOT_FOUND',
                 message: 'Usuario. Registro no encontrado.',
             });
         }
