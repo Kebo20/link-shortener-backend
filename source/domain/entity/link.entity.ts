@@ -1,7 +1,7 @@
 
 export interface LinkEntity {
 
-    idLink: string
+    idLink?: string
     idUser: string
     originalUrl: string
     shortUrl: string
@@ -23,7 +23,7 @@ export interface LinkEntity {
 
 export interface LinkList {
 
-    idLink: string
+    idLink?: string
     originalUrl: string
     shortUrl: string
     description: string

@@ -1,15 +1,5 @@
 
-import { sequelize, namespace } from '../db/mysql'
-import bcrypt from 'bcrypt'
 import { NextFunction, Request, Response } from "express";
-import { UserUseCase } from '../../application/useCase/user.useCase';
-import { PersonUseCase } from '../../application/useCase/person.useCase';
-import { PersonEntity } from '../../domain/entity/person.entity';
-import { UserEntity } from '../../domain/entity/user.entity';
-// import { UserAttributes } from '../interfaces/user';
-// import { PersonAttributes } from '../interfaces/person';
-// import { UserService } from '../services/user';
-// import { PersonService } from '../services/person';
 import PDFDocument from 'pdfkit';
 import fs from 'fs';
 import { transcode } from 'buffer';
@@ -129,7 +119,6 @@ export class UserController {
 
     pdf = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
-        const transaction = await sequelize.transaction();
 
         try {
 
@@ -181,9 +170,7 @@ export class UserController {
             res.json({ data: result });
 
         } catch (error) {
-            if (transaction) {
-                await transaction.rollback();
-            }
+
             next(error);
         }
 

@@ -3,22 +3,34 @@ import { LinkRepositoryI } from "../../domain/repository/link.repository";
 import { HttpError } from '../../infrastructure/utils/handleError'
 import bcrypt from 'bcrypt'
 
+export interface LinkRegisterDTO {
+
+    idLink?: string
+    idUser: string
+    originalUrl: string
+    description: string
+    password?: string
+    createdBy: string
+
+
+
+}
 export class LinkUseCase {
     constructor(private readonly linkRepository: LinkRepositoryI) { }
 
-    public register = async (data: LinkEntity) => {
+    public register = async (data: LinkRegisterDTO) => {
 
         const shortUrl = ''
-        const newData = { ...data, shortUrl }
+        const newData = { ...data, shortUrl, creationDate: new Date(), status: 1, active: 1, countClicks: 0, expiresAt: new Date() }
 
         const linkCreated = await this.linkRepository.register(newData);
         return linkCreated
     }
 
-    public update = async (data: LinkEntity) => {
+    public update = async (data: LinkRegisterDTO) => {
 
 
-        const vUserId = await this.linkRepository.findById(data.idLink)
+        const vUserId = await this.linkRepository.findById(data.idLink!)
         if (!vUserId) {
             throw new HttpError({
                 code: 'NOT_FOUND',
@@ -26,7 +38,9 @@ export class LinkUseCase {
             });
         }
 
-        const linkUpdated = await this.linkRepository.update(data);
+        const shortUrl = ''
+        const updateData = { ...data, shortUrl, creationDate: new Date(), status: 1, active: 1, countClicks: 0, expiresAt: new Date() }
+        const linkUpdated = await this.linkRepository.update(updateData);
         return linkUpdated
     }
 

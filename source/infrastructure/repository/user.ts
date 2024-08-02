@@ -69,7 +69,7 @@ export class UserRepository implements UserRepositoryI {
     }
     async delete({ idUser, deletedBy }: { idUser: string, deletedBy: string }): Promise<number> {
         const updateUser = await UserModel.update(
-            { status: 0, deletedBy },
+            { status: 0, deletedBy, deletionDate: new Date() },
             {
                 where: {
                     idUser,
