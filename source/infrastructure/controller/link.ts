@@ -15,7 +15,7 @@ export class LinkController {
             const { originalUrl, description, password } = res.locals.body;
             const { idUser } = res.locals.tokenResponse
 
-            const newData = { idUser: idUser, originalUrl, description, password, createdBy: idUser }
+            const newData = { idUser: idUser ?? null, originalUrl, description, password, createdBy: idUser ?? null }
             await this.linkService.register(newData)
 
 

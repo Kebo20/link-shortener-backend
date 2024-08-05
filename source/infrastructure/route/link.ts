@@ -1,5 +1,7 @@
 import express from "express";
 import { validatorRegisterUser, validatorUpdateUser, validatorDeleteUser, validatorGetUser } from '../middlewares/user'
+import { validatorPassword, validatorRegisterLink, validatorShortUrl } from '../middlewares/link'
+
 import { validateToken } from '../middlewares/token'
 import { validatorPermissions } from '../middlewares/authorization'
 
@@ -35,13 +37,13 @@ const userService = new LinkService(linkUseCase, sequelizeRepository)
 
 const linkController = new LinkController(userService)
 
-router.get('/', validateToken, validatorPermissions('user'), linkController.list)
-router.get('/:id', validateToken, validatorPermissions('user'), validatorGetUser, linkController.get)
-router.get('/short-url/:id', validateToken, validatorPermissions('user'), validatorGetUser, linkController.getByShortUrl)
-router.post('/', validateToken, validatorPermissions('user'), validatorRegisterUser, linkController.register)
-router.post('/validate-password', validateToken, validatorPermissions('user'), validatorRegisterUser, linkController.validatePassword)
-router.put('/:id', validateToken, validatorPermissions('user'), validatorUpdateUser, linkController.update)
-router.delete('/:id', validateToken, validatorPermissions('user'), validatorDeleteUser, linkController.delete)
+// router.get('/', validateToken, validatorPermissions('user'), linkController.list)
+// router.get('/:id', validateToken, validatorPermissions('user'), validatorGetUser, linkController.get)
+router.get('/short-url/:id', validatorShortUrl, linkController.getByShortUrl)
+router.post('/', validatorRegisterLink, linkController.register)
+router.post('/validate-password', validatorPassword, linkController.validatePassword)
+// router.put('/:id', validateToken, validatorPermissions('user'), validatorUpdateUser, linkController.update)
+// router.delete('/:id', validateToken, validatorPermissions('user'), validatorDeleteUser, linkController.delete)
 
 
 
