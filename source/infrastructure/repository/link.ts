@@ -4,6 +4,7 @@ import { LinkEntity, LinkList, LinkUpdateDTO } from '../../domain/entity/link.en
 import LinkModel from '../model/link';
 import { ClickEntity } from '../../domain/entity/click.entity';
 import ClickModel from '../model/click';
+import { Link } from 'swagger-jsdoc';
 
 
 
@@ -31,7 +32,7 @@ export class LinkRepository implements LinkRepositoryI {
     }
     async findByShortUrl(shortUrl: string): Promise<LinkList | null> {
         const link = await LinkModel.findOne({
-            attributes: ['idLink', 'originalUrl', 'shortUrl', 'description', 'expiresAt', 'countClicks', 'active'],
+            attributes: ['idLink', 'originalUrl', 'shortUrl', 'description', 'expiresAt', 'countClicks', 'active', 'password'],
             where: { status: 1, shortUrl }
         })
         return link

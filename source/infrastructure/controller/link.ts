@@ -12,14 +12,14 @@ export class LinkController {
 
         try {
 
-            const { originalUrl, description, password } = res.locals.body;
-            const { idUser } = res.locals.tokenResponse
+            const { originalUrl, description, password, expiresAt } = res.locals.body;
+            // const { idUser } = res.locals.tokenResponse
 
-            const newData = { idUser: idUser ?? null, originalUrl, description, password, createdBy: idUser ?? null }
-            await this.linkService.register(newData)
+            const newData = { originalUrl, description, password, expiresAt }
+            const link = await this.linkService.register(newData)
 
 
-            res.json({ message: 'Link registrado correctamente ' });
+            res.json({ message: 'Link registrado correctamente ', data: link });
 
         } catch (error) {
 
@@ -55,7 +55,7 @@ export class LinkController {
         try {
 
             const { idLink, password } = res.locals.body;
-            const { idUser } = res.locals.tokenResponse
+            // const { idUser } = res.locals.tokenResponse
 
             const link = await this.linkService.validatePassword(idLink, password, req)
 
@@ -135,9 +135,9 @@ export class LinkController {
 
         try {
 
-            const { id } = res.locals.body;
+            const { shortUrl } = res.locals.body;
 
-            const link = await this.linkService.getByShortUrl(id, req)
+            const link = await this.linkService.getByShortUrl(shortUrl, req)
 
 
             res.json({ data: link });

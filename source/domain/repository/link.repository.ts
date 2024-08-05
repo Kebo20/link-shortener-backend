@@ -1,3 +1,4 @@
+import { Link } from "swagger-jsdoc";
 import { ClickEntity } from "../entity/click.entity";
 import { LinkEntity, LinkList, LinkUpdateDTO } from "../entity/link.entity";
 

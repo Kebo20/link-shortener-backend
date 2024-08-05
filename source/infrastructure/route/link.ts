@@ -39,7 +39,7 @@ const linkController = new LinkController(userService)
 
 // router.get('/', validateToken, validatorPermissions('user'), linkController.list)
 // router.get('/:id', validateToken, validatorPermissions('user'), validatorGetUser, linkController.get)
-router.get('/short-url/:id', validatorShortUrl, linkController.getByShortUrl)
+router.get('/short-url/:shortUrl', validatorShortUrl, linkController.getByShortUrl)
 router.post('/', validatorRegisterLink, linkController.register)
 router.post('/validate-password', validatorPassword, linkController.validatePassword)
 // router.put('/:id', validateToken, validatorPermissions('user'), validatorUpdateUser, linkController.update)

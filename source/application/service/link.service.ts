@@ -13,11 +13,13 @@ export class LinkService {
     async register(data: LinkRegisterDTO) {
 
         const orm = await this.transactionRepository.run()
-
+        let link
         await orm.transaction(async () => {
 
-            await this.linkUseCase.register(data)
+            link = await this.linkUseCase.register(data)
         })
+
+        return link
 
     }
 

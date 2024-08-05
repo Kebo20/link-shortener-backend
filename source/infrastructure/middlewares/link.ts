@@ -39,7 +39,7 @@ export const validatorRegisterLink = async (req: Request, res: Response, next: N
 
 export const validatorShortUrl = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const input = req.body;
+        const input = req.params;
 
         const schema = z.object({
             shortUrl: z.string()
@@ -73,9 +73,10 @@ export const validatorPassword = async (req: Request, res: Response, next: NextF
 
         const schema = z.object({
             password: z.string(),
-
+            idLink: z.string().uuid(),
         }).required({
-            password: true
+            password: true,
+            idLink: true
         });
 
         const resultValidateData = schema.safeParse(input)

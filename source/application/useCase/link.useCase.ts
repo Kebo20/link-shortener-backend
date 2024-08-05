@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LinkEntity, LinkRegisterDTO, LinkUpdateDTO } from "../../domain/entity/link.entity";
+import { LinkRegisterDTO, LinkUpdateDTO } from "../../domain/entity/link.entity";
 import { LinkRepositoryI } from "../../domain/repository/link.repository";
 import { HttpError } from '../../infrastructure/utils/handleError'
 import bcrypt from 'bcrypt'
@@ -12,18 +12,19 @@ export class LinkUseCase {
     public register = async (data: LinkRegisterDTO) => {
 
 
-        let shortUrl = this.generateUniqueCode(6)
+        let shortUrlI = this.generateUniqueCode(6)
 
-        while (await this.linkRepository.findByShortUrl(shortUrl)) {
-            shortUrl = this.generateUniqueCode(6)
+        while (await this.linkRepository.findByShortUrl(shortUrlI)) {
+            shortUrlI = this.generateUniqueCode(6)
         }
 
+        const newData = { ...data, password: data.password ? await bcrypt.hash(data.password, 10) : null, shortUrl: shortUrlI, creationDate: new Date(), status: 1, active: 1, countClicks: 0 }
 
-        const newData = { ...data, shortUrl, creationDate: new Date(), status: 1, active: 1, countClicks: 0, expiresAt: new Date() }
-
-        const linkCreated = await this.linkRepository.register(newData);
-        return linkCreated
+        const link = await this.linkRepository.register(newData);
+        const { originalUrl, shortUrl, description, expiresAt } = link
+        return { originalUrl, shortUrl, description, expiresAt }
     }
+
 
 
     generateUniqueCode = (length: number) => {
@@ -111,8 +112,8 @@ export class LinkUseCase {
 
         }
 
-
-        return { ...link, password: link.password ? 1 : 0 }
+        const show = link.password ? false : true
+        return { originalUrl: show ? link.originalUrl : '', show, idLink: link.idLink }
     }
 
 
@@ -200,14 +201,21 @@ export class LinkUseCase {
 
     async getDataGeoIp(ip: string): Promise<object> {
 
-        try {
+        // try {
 
-            const response = await axios.get(`http://ip-api.com/json/${ip}`);
-            return response.data
+        //     const { data } = await axios.get(`http://ip-api.com/json/${ip}`);
+        //     if (data.status === 'success') {
+        //         return data
 
-        } catch {
-            return {}
-        }
+        //     } else {
+        //         return {}
+
+        //     }
+
+        // } catch {
+        //     return {}
+        // }
+        return {}
     }
 
 }

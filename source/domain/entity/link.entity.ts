@@ -6,8 +6,8 @@ export interface LinkEntity {
     originalUrl: string
     shortUrl: string
     description: string
-    expiresAt: Date
-    password?: string
+    expiresAt?: Date
+    password?: string | null
     countClicks: number
     status: number
     active: number
@@ -27,7 +27,7 @@ export interface LinkList {
     originalUrl: string
     shortUrl: string
     description: string
-    expiresAt: Date
+    expiresAt?: Date
     countClicks: number
     active: number
     password?: string
@@ -37,14 +37,16 @@ export interface LinkList {
 export interface LinkRegisterDTO {
 
     idLink?: string
-    idUser: string
+    idUser?: string
     originalUrl: string
     description: string
     password?: string
-    createdBy: string
+    createdBy?: string
     creationDate?: Date
+    expiresAt?: Date
 
 }
+
 
 
 export interface LinkUpdateDTO {
