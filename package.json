@@ -21,6 +21,7 @@
     "@sequelize/core": "^7.0.0-alpha.41",
     "@sequelize/mysql": "^7.0.0-alpha.41",
     "@types/pdfkit": "^0.13.4",
+    "axios": "1.7.3",
     "bcrypt": "5.1.1",
     "cls-hooked": "4.2.2",
     "cors": "2.8.5",
@@ -42,6 +43,7 @@
     "zod": "3.22.4"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/bcrypt": "^5.0.2",
     "@types/cls-hooked": "^4.3.8",
     "@types/cors": "^2.8.17",

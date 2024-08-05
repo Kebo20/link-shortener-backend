@@ -57,8 +57,8 @@ class ClickModel extends Model<LinkModel, ClickEntity> implements ClickEntity {
     @Column(DataType.DATE)
     public creationDate!: Date;
 
-    @HasOne(() => LinkModel)
-    public user!: LinkModel;
+    @BelongsTo(() => LinkModel)
+    public link!: LinkModel;
 }
 
 sequelize.addModels([ClickModel]);

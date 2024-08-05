@@ -2,7 +2,7 @@
 export interface LinkEntity {
 
     idLink?: string
-    idUser: string
+    idUser?: string
     originalUrl: string
     shortUrl: string
     description: string
@@ -11,7 +11,7 @@ export interface LinkEntity {
     countClicks: number
     status: number
     active: number
-    createdBy: string
+    createdBy?: string
     updatedBy?: string
     deletedBy?: string
     creationDate: Date
@@ -23,7 +23,7 @@ export interface LinkEntity {
 
 export interface LinkList {
 
-    idLink?: string
+    idLink: string
     originalUrl: string
     shortUrl: string
     description: string
@@ -34,6 +34,37 @@ export interface LinkList {
 
 }
 
+export interface LinkRegisterDTO {
 
+    idLink?: string
+    idUser: string
+    originalUrl: string
+    description: string
+    password?: string
+    createdBy: string
+    creationDate?: Date
+
+}
+
+
+export interface LinkUpdateDTO {
+
+    idLink: string
+    idUser?: string
+    originalUrl?: string
+    shortUrl?: string
+    description?: string
+    expiresAt?: Date
+    password?: string
+    countClicks?: number
+    status?: number
+    active?: number
+    createdBy?: string
+    updatedBy?: string
+    deletedBy?: string
+    creationDate?: Date
+    updateDate: Date
+    deletionDate?: Date
+}
 
 

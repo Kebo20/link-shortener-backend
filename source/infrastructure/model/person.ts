@@ -66,8 +66,6 @@ export class PersonModel extends Model<PersonModel, PersonEntity> implements Per
     @Column(DataType.DATE)
     deletionDate?: Date;
 
-    // @HasOne(() => UserModel)
-    // public user!: UserModel;
 
     getFormattedBirthDate(): string {
         const date = new Date(this.birthDate);

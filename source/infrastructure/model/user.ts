@@ -1,8 +1,9 @@
-import { Table, Column, Model, PrimaryKey, DataType, Default, ForeignKey, BelongsTo, IsUUID } from 'sequelize-typescript';
+import { Table, Column, Model, PrimaryKey, DataType, Default, ForeignKey, BelongsTo, IsUUID, HasMany } from 'sequelize-typescript';
 import { Optional } from 'sequelize';
 import { sequelize } from '../db/mysql';
 import PersonModel from './person';
 import { UserEntity } from '../../domain/entity/user.entity';
+import LinkModel from './link';
 
 // interface UserCreationAttributes extends Optional<UserEntity, 'idUser' | 'creationDate' | 'updateDate' | 'deletionDate'> { }
 

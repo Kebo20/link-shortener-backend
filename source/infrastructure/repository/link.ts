@@ -1,17 +1,22 @@
-// import { UserAttributes } from '../interfaces/user';
-import { Op } from 'sequelize';
 
 import { LinkRepositoryI } from '../../domain/repository/link.repository'
-import { UserEntity } from '../../domain/entity/user.entity';
-import UserModel from "../model/user";
-import PersonModel from "../model/person";
-import { UserPersonList } from '../../domain/entity/userPerson.entity';
-import { LinkEntity, LinkList } from '../../domain/entity/link.entity';
+import { LinkEntity, LinkList, LinkUpdateDTO } from '../../domain/entity/link.entity';
 import LinkModel from '../model/link';
+import { ClickEntity } from '../../domain/entity/click.entity';
+import ClickModel from '../model/click';
 
 
 
 export class LinkRepository implements LinkRepositoryI {
+
+    async registerClick(data: ClickEntity): Promise<ClickEntity> {
+        const click = await ClickModel.create(data)
+        return click
+    }
+
+    valiatePassword(password: string): Promise<boolean> {
+        throw new Error('Method not implemented.');
+    }
     async register(data: LinkEntity): Promise<LinkEntity> {
 
         const link = await LinkModel.create(data)
@@ -31,7 +36,7 @@ export class LinkRepository implements LinkRepositoryI {
         })
         return link
     }
-    async update(data: LinkEntity): Promise<number> {
+    async update(data: LinkUpdateDTO): Promise<number> {
         const updateUser = await LinkModel.update(data, {
             where: {
                 idUser: data.idLink,
@@ -56,7 +61,7 @@ export class LinkRepository implements LinkRepositoryI {
         })
         return links
     }
-    valiatePassword(password: string): Promise<boolean> {
+    validatePassword(password: string): Promise<boolean> {
         throw new Error('Method not implemented.');
     }
 

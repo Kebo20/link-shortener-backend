@@ -1,18 +1,9 @@
 import { TransactionRepositoryI } from "../../domain/repository/transaction.repository";
-import { PersonUseCase } from "../useCase/person.useCase";
 import { LinkUseCase } from "../useCase/link.useCase";
+import { LinkRegisterDTO, LinkUpdateDTO } from "../../domain/entity/link.entity";
+import { NextFunction, Request, Response } from "express";
 
 
-export interface LinkRegisterDTO {
-
-    idLink?: string
-    idUser: string
-    originalUrl: string
-    description: string
-    password?: string
-    createdBy: string
-
-}
 
 export class LinkService {
 
@@ -30,7 +21,7 @@ export class LinkService {
 
     }
 
-    async update(data: LinkRegisterDTO) {
+    async update(data: LinkUpdateDTO) {
 
         const orm = await this.transactionRepository.run()
 
@@ -83,15 +74,15 @@ export class LinkService {
     }
 
 
-    async validatePassword(idLink: string, password: string) {
+    async validatePassword(idLink: string, password: string, req: Request) {
 
 
-        return await this.linkUseCase.validatePassword({ idLink, password })
+        return await this.linkUseCase.validatePassword({ idLink, password, req })
 
 
     }
 
-    async getByShortUrl(shortUrl: string) {
+    async getByShortUrl(shortUrl: string, req: Request) {
 
         const orm = await this.transactionRepository.run()
 
@@ -99,7 +90,7 @@ export class LinkService {
 
         await orm.transaction(async () => {
 
-            link = await this.linkUseCase.getByShortUrl(shortUrl)
+            link = await this.linkUseCase.getByShortUrl(shortUrl, req)
         })
 
         return link

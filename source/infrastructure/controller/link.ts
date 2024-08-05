@@ -35,7 +35,7 @@ export class LinkController {
             const { idLink, originalUrl, description, password } = res.locals.body;
             const { idUser } = res.locals.tokenResponse
 
-            const newData = { idLink, idUser: idUser, originalUrl, description, password, createdBy: idUser }
+            const newData = { idLink, idUser: idUser, originalUrl, description, password, createdBy: idUser, updateDate: new Date() }
             await this.linkService.update(newData)
 
             res.json({ message: 'Link actualizado correctamente ' });
@@ -57,7 +57,7 @@ export class LinkController {
             const { idLink, password } = res.locals.body;
             const { idUser } = res.locals.tokenResponse
 
-            const link = await this.linkService.validatePassword(idLink, password)
+            const link = await this.linkService.validatePassword(idLink, password, req)
 
             res.json({ data: link });
 
@@ -137,7 +137,7 @@ export class LinkController {
 
             const { id } = res.locals.body;
 
-            const link = await this.linkService.getByShortUrl(id)
+            const link = await this.linkService.getByShortUrl(id, req)
 
 
             res.json({ data: link });

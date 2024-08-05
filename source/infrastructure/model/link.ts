@@ -1,5 +1,4 @@
 import { Table, Column, Model, PrimaryKey, DataType, Default, ForeignKey, BelongsTo, IsUUID, HasOne } from 'sequelize-typescript';
-import { Optional } from 'sequelize';
 import { sequelize } from '../db/mysql';
 import UserModel from './user';
 import { LinkEntity } from '../../domain/entity/link.entity';
@@ -66,7 +65,7 @@ class LinkModel extends Model<LinkModel, LinkEntity> implements LinkEntity {
     @Column(DataType.DATE)
     public deletionDate!: Date;
 
-    @HasOne(() => UserModel)
+    @BelongsTo(() => UserModel)
     public user!: UserModel;
 }
 

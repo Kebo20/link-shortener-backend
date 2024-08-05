@@ -1,17 +1,16 @@
 
 export interface ClickEntity {
 
-    idClick: string
+    idClick?: string
     idLink: string
     metaData: string
-    referrer: string
-    deviceType: string
-    city: string
-    country: string
-    userAgent: string
-    ip: string
+    referrer: string | null
+    deviceType: string | null
+    city: string | null
+    country: string | null
+    userAgent: string | null
+    ip: string | null
     clickedAt: Date
-    createdBy: string
     creationDate: Date
 
 }
