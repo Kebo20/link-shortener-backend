@@ -4,7 +4,7 @@ import express from "express";
 export const routerExpress = express.Router();
 
 const pathRouter = `${__dirname}`;
-
+const extension = process.env.MODE === 'PRODUCTION' ? 'js' : 'ts'
 async function indexRoute() {
 
     try {
@@ -15,7 +15,7 @@ async function indexRoute() {
             const skip = ['index'].includes(fileWithOutExt);
 
             if (!skip) {
-                const { router } = await import(`./${fileWithOutExt}.ts`);
+                const { router } = await import(`./${fileWithOutExt}.${extension}`);
 
                 routerExpress.use(`/${fileWithOutExt}`, router);
                 console.log('CARGAR RUTA ---->', fileWithOutExt);

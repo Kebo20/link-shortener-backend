@@ -27,3 +27,11 @@ This README would normally document whatever steps are necessary to get your app
 
 * Repo owner or admin
 * Other community or team contact
+
+
+CLONAR API
+NPM INSTALL
+NANO .ENV
+NPM RUN BUILD (TS)
+NPM RUN STAR:PM2
+HABILITAR PUERTO 9090 EN EL FIREWALL
