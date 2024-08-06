@@ -106,20 +106,19 @@ export class LinkUseCase {
         }
 
         if (!link.password) {
-            const updateData = { updateDate: new Date(), countClicks: link.countClicks + 1, idLink: link.idLink }
-            await this.linkRepository.update(updateData);
-            await this.registerClick(link.idLink, req)
+
+            await this.registerClick(link.idLink, req, link.countClicks)
 
         }
 
         const show = link.password ? false : true
-        return { originalUrl: show ? link.originalUrl : '', show, idLink: link.idLink }
+        return { originalUrl: show ? link.originalUrl : '', show }
     }
 
 
-    public validatePassword = async ({ idLink, password, req }: { idLink: string, password: string, req: Request }) => {
+    public validatePassword = async ({ shortUrl, password, req }: { shortUrl: string, password: string, req: Request }) => {
 
-        const link = await this.linkRepository.findById(idLink);
+        const link = await this.linkRepository.findByShortUrl(shortUrl);
 
         if (!link) {
             throw new HttpError({
@@ -155,17 +154,22 @@ export class LinkUseCase {
 
             }
 
-            await this.registerClick(link.idLink, req)
+            await this.registerClick(link.idLink, req, link.countClicks)
 
 
 
+        } else {
+            throw new HttpError({
+                code: 'FORBIDDEN',
+                message: 'Link deshabilitado',
+            });
         }
 
-        return { ...link, password: link.password ? 1 : 0 }
+        return { originalUrl: link.originalUrl }
 
     }
 
-    async registerClick(idLink: string, req: Request) {
+    async registerClick(idLink: string, req: Request, countClicks: number) {
 
         const ip = req.ip ?? null
         const userAgent = req.headers['user-agent'] ?? null
@@ -183,6 +187,9 @@ export class LinkUseCase {
             creationDate: new Date()
         }
         await this.linkRepository.registerClick(registerDataClick)
+
+        await this.linkRepository.update({ updateDate: new Date(), countClicks: countClicks + 1, idLink });
+
 
     }
 

@@ -54,10 +54,10 @@ export class LinkController {
 
         try {
 
-            const { idLink, password } = res.locals.body;
+            const { shortUrl, password } = res.locals.body;
             // const { idUser } = res.locals.tokenResponse
 
-            const link = await this.linkService.validatePassword(idLink, password, req)
+            const link = await this.linkService.validatePassword(shortUrl, password, req)
 
             res.json({ data: link });
 

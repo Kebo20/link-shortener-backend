@@ -8,8 +8,8 @@ export const validatorRegisterLink = async (req: Request, res: Response, next: N
 
         const schema = z.object({
             originalUrl: z.string().url(),
-            description: z.string().min(1).max(250).optional(),
-            password: z.string().min(1).max(8).optional()
+            description: z.string().min(0).max(250).optional(),
+            password: z.string().min(4).max(8).optional()
 
         }).partial({
             description: true,
@@ -73,10 +73,10 @@ export const validatorPassword = async (req: Request, res: Response, next: NextF
 
         const schema = z.object({
             password: z.string(),
-            idLink: z.string().uuid(),
+            shortUrl: z.string().min(6).max(6)
         }).required({
             password: true,
-            idLink: true
+            shortUrl: true
         });
 
         const resultValidateData = schema.safeParse(input)

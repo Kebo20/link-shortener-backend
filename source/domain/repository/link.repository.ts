@@ -12,7 +12,6 @@ export interface LinkRepositoryI {
     update(data: LinkUpdateDTO): Promise<number>;
     delete({ idLink, deletedBy }: { idLink: string, deletedBy: string }): Promise<number>;
     list(): Promise<LinkList[]>;
-    valiatePassword(password: string): Promise<boolean>;
 
 
 }

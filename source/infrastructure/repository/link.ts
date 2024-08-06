@@ -15,9 +15,6 @@ export class LinkRepository implements LinkRepositoryI {
         return click
     }
 
-    valiatePassword(password: string): Promise<boolean> {
-        throw new Error('Method not implemented.');
-    }
     async register(data: LinkEntity): Promise<LinkEntity> {
 
         const link = await LinkModel.create(data)
@@ -38,12 +35,12 @@ export class LinkRepository implements LinkRepositoryI {
         return link
     }
     async update(data: LinkUpdateDTO): Promise<number> {
-        const updateUser = await LinkModel.update(data, {
+        const updateLink = await LinkModel.update(data, {
             where: {
-                idUser: data.idLink,
+                idLink: data.idLink,
             }
         },)
-        return updateUser[0]
+        return updateLink[0]
     }
     async delete({ idLink, deletedBy }: { idLink: string; deletedBy: string; }): Promise<number> {
         const updateLink = await LinkModel.update(
@@ -62,10 +59,5 @@ export class LinkRepository implements LinkRepositoryI {
         })
         return links
     }
-    validatePassword(password: string): Promise<boolean> {
-        throw new Error('Method not implemented.');
-    }
-
-
 
 }

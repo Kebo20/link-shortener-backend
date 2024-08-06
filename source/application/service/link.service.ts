@@ -76,11 +76,16 @@ export class LinkService {
     }
 
 
-    async validatePassword(idLink: string, password: string, req: Request) {
+    async validatePassword(shortUrl: string, password: string, req: Request) {
 
+        const orm = await this.transactionRepository.run()
+        let link
+        await orm.transaction(async () => {
+            link = await this.linkUseCase.validatePassword({ shortUrl, password, req })
 
-        return await this.linkUseCase.validatePassword({ idLink, password, req })
+        })
 
+        return link
 
     }
 
