@@ -11,18 +11,42 @@ export class LinkUseCase {
 
     public register = async (data: LinkRegisterDTO) => {
 
+        let shortUrlI
+        if (data.shortUrl) {
 
-        let shortUrlI = this.generateUniqueCode(6)
+            if (await this.findByShortUrl(data.shortUrl)) {
+                throw new HttpError({
+                    code: 'BAD_REQUEST',
+                    message: 'Código usado por otro usuario',
+                });
+            } else {
+                shortUrlI = data.shortUrl
+            }
+        } else {
 
-        while (await this.linkRepository.findByShortUrl(shortUrlI)) {
             shortUrlI = this.generateUniqueCode(6)
+
+            while (await this.findByShortUrl(shortUrlI)) {
+                shortUrlI = this.generateUniqueCode(6)
+            }
         }
+
+
 
         const newData = { ...data, password: data.password ? await bcrypt.hash(data.password, 10) : null, shortUrl: shortUrlI, creationDate: new Date(), status: 1, active: 1, countClicks: 0 }
 
         const link = await this.linkRepository.register(newData);
         const { originalUrl, shortUrl, description, expiresAt } = link
         return { originalUrl, shortUrl, description, expiresAt }
+    }
+
+    async findByShortUrl(shortUrl: string) {
+
+        const link = await this.linkRepository.findByShortUrl(shortUrl)
+
+        if (link) return true
+
+        return false
     }
 
 
@@ -158,11 +182,6 @@ export class LinkUseCase {
 
 
 
-        } else {
-            throw new HttpError({
-                code: 'FORBIDDEN',
-                message: 'Link deshabilitado',
-            });
         }
 
         return { originalUrl: link.originalUrl }

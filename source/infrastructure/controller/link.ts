@@ -12,10 +12,10 @@ export class LinkController {
 
         try {
 
-            const { originalUrl, description, password, expiresAt } = res.locals.body;
+            const { originalUrl, description, password, expiresAt, shortUrl } = res.locals.body;
             // const { idUser } = res.locals.tokenResponse
 
-            const newData = { originalUrl, description, password, expiresAt }
+            const newData = { originalUrl, description, password, expiresAt, shortUrl }
             const link = await this.linkService.register(newData)
 
 

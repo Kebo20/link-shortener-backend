@@ -44,6 +44,7 @@ export interface LinkRegisterDTO {
     createdBy?: string
     creationDate?: Date
     expiresAt?: Date
+    shortUrl?: string
 
 }
 
