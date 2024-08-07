@@ -190,7 +190,7 @@ export class LinkUseCase {
 
     async registerClick(idLink: string, req: Request, countClicks: number) {
 
-        const ip = req.clientIp ?? null
+        const ip = requestIp.getClientIp(req)
         const userAgent = req.headers['user-agent'] ?? null
         const referrer = `${req.headers.referer}` || `${req.headers.referrer}`
         const deviceType = userAgent ? this.getDeviceType(userAgent) : null
