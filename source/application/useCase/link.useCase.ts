@@ -205,11 +205,13 @@ export class LinkUseCase {
             city = dataIp.city
 
         }
+        // Eliminar caracteres no ASCII
+        const ipGeo = JSON.stringify(dataIp).replace(/[^\x20-\x7E]/g, '');
 
         const registerDataClick = {
             idLink, metaData: JSON.stringify(req.headers), referrer,
             deviceType, city, country: country_name,
-            userAgent, ip, ipGeo: JSON.stringify(dataIp),
+            userAgent, ip, ipGeo,
             clickedAt: new Date(),
             creationDate: new Date()
         }
