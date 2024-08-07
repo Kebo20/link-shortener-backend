@@ -229,8 +229,8 @@ export class LinkUseCase {
 
         try {
 
-            const { data } = await axios.get(`http://ip-api.com/json/${ip}`);
-            console.log(data)
+            const { data } = await axios.get(`https://api.ipgeolocation.io/ipgeo?apiKey=28e74ffc6d3b49f1b932f6559345fb6b&ip=${ip}`);
+            console.log('IP GEO', data)
             if (data.status === 'success') {
                 return data
 
