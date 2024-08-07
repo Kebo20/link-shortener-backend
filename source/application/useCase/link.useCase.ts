@@ -195,13 +195,21 @@ export class LinkUseCase {
         const referrer = `${req.headers.referer}` || `${req.headers.referrer}`
         const deviceType = userAgent ? this.getDeviceType(userAgent) : null
 
-        let dataIp: any = { city: '', country: '' }
-        if (ip) dataIp = await this.getDataGeoIp(ip)
+        let dataIp: any
+        let country_name
+        let city
+
+        if (ip) {
+            dataIp = await this.getDataGeoIp(ip)
+            country_name = dataIp.country_name
+            city = dataIp.city
+
+        }
 
         const registerDataClick = {
             idLink, metaData: JSON.stringify(req.headers), referrer,
-            deviceType, city: dataIp.city ?? '', country: dataIp.country ?? '',
-            userAgent, ip,
+            deviceType, city, country: country_name,
+            userAgent, ip, ipGeo: JSON.parse(dataIp),
             clickedAt: new Date(),
             creationDate: new Date()
         }
@@ -231,7 +239,7 @@ export class LinkUseCase {
 
             const { data } = await axios.get(`https://api.ipgeolocation.io/ipgeo?apiKey=28e74ffc6d3b49f1b932f6559345fb6b&ip=${ip}`);
             console.log('IP GEO', data)
-            if (data.status === 'success') {
+            if (data.ip) {
                 return data
 
             } else {
