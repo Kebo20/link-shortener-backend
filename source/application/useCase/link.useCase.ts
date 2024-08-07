@@ -209,7 +209,7 @@ export class LinkUseCase {
         const registerDataClick = {
             idLink, metaData: JSON.stringify(req.headers), referrer,
             deviceType, city, country: country_name,
-            userAgent, ip, ipGeo: JSON.parse(dataIp),
+            userAgent, ip, ipGeo: JSON.stringify(dataIp),
             clickedAt: new Date(),
             creationDate: new Date()
         }
