@@ -1,5 +1,5 @@
 import { saveLog } from './logger';
-// import requestIp from 'request-ip';
+import requestIp from 'request-ip';
 
 interface TableCodes {
     [key: string]: number;
@@ -51,7 +51,7 @@ const errorHandler = (err: HttpError, req: Request, res: Response, next: NextFun
         locals: res.locals,
         headers: req.headers,
         userAgent: req.headers['user-agent'],
-        ipAdress: req.ip ?? ''
+        ipAdress: requestIp.getClientIp(req) ?? ''
 
     })
 

@@ -4,7 +4,7 @@ import { LinkRepositoryI } from "../../domain/repository/link.repository";
 import { HttpError } from '../../infrastructure/utils/handleError'
 import bcrypt from 'bcrypt'
 import { Request } from "express";
-// import requestIp from 'request-ip';
+import requestIp from 'request-ip';
 
 export class LinkUseCase {
     constructor(private readonly linkRepository: LinkRepositoryI) { }
@@ -190,7 +190,7 @@ export class LinkUseCase {
 
     async registerClick(idLink: string, req: Request, countClicks: number) {
 
-        const ip = req.ip ?? null
+        const ip = requestIp.getClientIp(req)
         const userAgent = req.headers['user-agent'] ?? null
         const referrer = `${req.headers.referer}` || `${req.headers.referrer}`
         const deviceType = userAgent ? this.getDeviceType(userAgent) : null
