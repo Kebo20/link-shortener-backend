@@ -50,7 +50,8 @@ const errorHandler = (err: HttpError, req: Request, res: Response, next: NextFun
         locals: res.locals,
         headers: req.headers,
         userAgent: req.headers['user-agent'],
-        ipAdress: req.ip
+        ipAdress: `${req.headers['x-forwarded-for']}` || `${req.socket.remoteAddress}` || `${req.ip}`
+
     })
 
     res.status(statusCode).json({ code, message: statusCode < 500 ? errorMessage : 'Ocurrió un error en el sistema', ID: idLog });

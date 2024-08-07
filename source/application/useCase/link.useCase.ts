@@ -190,9 +190,9 @@ export class LinkUseCase {
 
     async registerClick(idLink: string, req: Request, countClicks: number) {
 
-        const ip = req.ip ?? null
+        const ip = `${req.headers['x-forwarded-for']}` || `${req.socket.remoteAddress}` || `${req.ip}`
         const userAgent = req.headers['user-agent'] ?? null
-        const referrer = req.headers.referer ?? null
+        const referrer = `${req.headers.referer}` || `${req.headers.referrer}`
         const deviceType = userAgent ? this.getDeviceType(userAgent) : null
 
         let dataIp: any
