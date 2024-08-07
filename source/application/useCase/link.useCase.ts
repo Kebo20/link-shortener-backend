@@ -230,6 +230,7 @@ export class LinkUseCase {
         try {
 
             const { data } = await axios.get(`http://ip-api.com/json/${ip}`);
+            console.log(data)
             if (data.status === 'success') {
                 return data
 
