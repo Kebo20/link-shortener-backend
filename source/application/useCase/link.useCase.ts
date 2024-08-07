@@ -195,7 +195,7 @@ export class LinkUseCase {
         const referrer = `${req.headers.referer}` || `${req.headers.referrer}`
         const deviceType = userAgent ? this.getDeviceType(userAgent) : null
 
-        let dataIp: any
+        let dataIp: any = { city: '', country: '' }
         if (ip) dataIp = await this.getDataGeoIp(ip)
 
         const registerDataClick = {
@@ -227,21 +227,20 @@ export class LinkUseCase {
 
     async getDataGeoIp(ip: string): Promise<object> {
 
-        // try {
+        try {
 
-        //     const { data } = await axios.get(`http://ip-api.com/json/${ip}`);
-        //     if (data.status === 'success') {
-        //         return data
+            const { data } = await axios.get(`http://ip-api.com/json/${ip}`);
+            if (data.status === 'success') {
+                return data
 
-        //     } else {
-        //         return {}
+            } else {
+                return {}
 
-        //     }
+            }
 
-        // } catch {
-        //     return {}
-        // }
-        return {}
+        } catch {
+            return {}
+        }
     }
 
 }
