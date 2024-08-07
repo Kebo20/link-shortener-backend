@@ -47,6 +47,9 @@ class ClickModel extends Model<LinkModel, ClickEntity> implements ClickEntity {
     @Column(DataType.STRING)
     public ip!: string;
 
+    @Column(DataType.STRING)
+    public ipGeo!: string;
+
     @Column(DataType.TINYINT)
     public status!: number;
 

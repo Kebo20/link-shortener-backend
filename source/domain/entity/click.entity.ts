@@ -10,6 +10,7 @@ export interface ClickEntity {
     country: string | null
     userAgent: string | null
     ip: string | null
+    ipGeo: string | null
     clickedAt: Date
     creationDate: Date
 
