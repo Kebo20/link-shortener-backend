@@ -1,0 +1,27 @@
+# Usa la imagen oficial de Node.js como base
+FROM node:20
+
+# Define el directorio de trabajo
+RUN mkdir -p /home/app
+# Instala dependencias globales, incluyendo nodemon
+RUN npm install -g nodemon
+WORKDIR /home/app
+
+# Copia los archivos de dependencias
+COPY package*.json ./
+
+# Instala todas las dependencias, incluidas las de desarrollo
+RUN npm install 
+
+
+# # Copia el resto del código
+# COPY . .
+
+# Compila el código TypeScript
+# RUN npm run build
+
+# Expone el puerto que usa la app
+EXPOSE 9090
+
+# Define el comando para ejecutar la app
+CMD ["npm", "run","server"]

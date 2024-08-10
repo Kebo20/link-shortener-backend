@@ -1,0 +1,37 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/home/app
+      - /home/app/node_modules
+
+    ports:
+      - "9090:9090"
+
+    environment:
+      - NODE_ENV=DEVELOPMENT
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=280510
+      - DB_NAME=node_api
+      - TOKEN_JWT=kebo24
+      - MODE=DEVELOPMENT
+      - PORT=9090
+    links:
+      - db
+
+  db:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: 280510
+      MYSQL_DATABASE: node_api
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
