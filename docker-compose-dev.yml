@@ -6,7 +6,7 @@ services:
     volumes:
       - .:/home/app
       - /home/app/node_modules
-
+    restart: always # Configura el contenedor para que siempre se reinicie
     ports:
       - "9090:9090"
 
