@@ -1,6 +1,7 @@
 
 import { NextFunction, Request, Response } from "express";
 import { LinkService } from '../../application/service/link.service';
+import { HttpError } from "../utils/handleError";
 export class LinkController {
 
     constructor(private linkService: LinkService) {
@@ -156,10 +157,15 @@ export class LinkController {
             // res.json({ data: link });
 
         } catch (error) {
+            if (error instanceof HttpError) {
+                // Si el error es de tipo HttpError, responde con su mensaje y código
+                res.status(400).send(error.message);
+            } else {
+                res.status(404).send('Ocurrió un error');
+                next(error);
 
-            res.status(404).send(error);
+            }
 
-            // next(error);
         }
 
 

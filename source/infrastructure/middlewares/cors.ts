@@ -2,7 +2,8 @@ import cors from 'cors'
 import { HttpError } from '../utils/handleError';
 
 const ACCEPTED_ORIGINS = [
-    // 'http://localhost:8080',
+    'http://linkevo',
+    'https://test.tecda.pe',
     'http://localhost:5173',
     'http://127.0.0.1:5173',
     'https://linkevo.app'
