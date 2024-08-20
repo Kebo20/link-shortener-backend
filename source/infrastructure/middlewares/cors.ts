@@ -26,12 +26,13 @@ export const corsMiddleware = ({ acceptedOrigins = ACCEPTED_ORIGINS } = {}) => c
             //     message: 'Not allowed by CORS',
             // }))
         }
+        return callback(null, true)
 
-        // return callback(new Error('Not allowed by CORS'))
-        return callback(new HttpError({
-            code: 'FORBIDDEN',
-            message: 'Not allowed by CORS...',
-        }))
+        // // return callback(new Error('Not allowed by CORS'))
+        // return callback(new HttpError({
+        //     code: 'FORBIDDEN',
+        //     message: 'Not allowed by CORS...',
+        // }))
 
 
     }
