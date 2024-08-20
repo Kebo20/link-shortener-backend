@@ -136,15 +136,30 @@ export class LinkController {
         try {
 
             const { shortUrl } = res.locals.body;
+            console.log(shortUrl)
 
-            const link = await this.linkService.getByShortUrl(shortUrl, req)
 
+            const link: any = await this.linkService.getByShortUrl(shortUrl, req)
 
-            res.json({ data: link });
+            if (link) {
+                if (link.show) {
+                    res.redirect(301, link.originalUrl) // o 302
+                } else {
+                    res.redirect(301, `${process.env.FRONTEND_HOST}/validate-password/${shortUrl}`) // o 302
+                }
+
+            } else {
+                res.status(404).send('URL no encontrada');
+
+            }
+
+            // res.json({ data: link });
 
         } catch (error) {
 
-            next(error);
+            res.status(404).send(error);
+
+            // next(error);
         }
 
 

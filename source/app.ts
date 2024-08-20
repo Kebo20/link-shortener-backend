@@ -2,6 +2,8 @@ import express, { json } from "express";
 import 'dotenv/config'
 import { corsMiddleware } from './infrastructure/middlewares/cors'
 import { routerExpress } from './infrastructure/route/index'
+import { routerExpress as routerExpress2 } from './infrastructure/route/index2'
+
 import { errorHandler } from "./infrastructure/utils/handleError";
 import { swagger } from "./swagger/index"
 import helmet from "helmet";
@@ -28,7 +30,9 @@ const limiter = rateLimit({
 swagger('/swagger', app)
 
 app.use(limiter)
-app.use('/v1', routerExpress)
+app.use('/api/v1', routerExpress)
+app.use('/', routerExpress2)
+
 app.use(errorHandler)
 
 app.listen(PORT, () => {

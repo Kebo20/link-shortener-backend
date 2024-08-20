@@ -12,7 +12,7 @@ async function indexRoute() {
 
         for (const file of files) {
             const fileWithOutExt = file.split('.').shift() ?? ''
-            const skip = ['index'].includes(fileWithOutExt);
+            const skip = ['index', 'index2'].includes(fileWithOutExt);
 
             if (!skip) {
                 const { router } = await import(`./${fileWithOutExt}.${extension}`);

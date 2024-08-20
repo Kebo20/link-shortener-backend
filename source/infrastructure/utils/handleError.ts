@@ -36,10 +36,10 @@ import { Request, Response, NextFunction } from 'express';
 const errorHandler = (err: HttpError, req: Request, res: Response, next: NextFunction) => {
     let code = err.code ?? 'INTERNAL_SERVER'
     const statusCode = TableCodes[code]
-    const errorMessage = validateJson(err.message ?? err)
+    const errormessage = validateJson(err.message ?? err)
 
     const { idLog } = saveLog({
-        message: errorMessage,
+        message: errormessage,
         stack: err.stack,
         path: req.path,
         method: req.method,
@@ -55,7 +55,7 @@ const errorHandler = (err: HttpError, req: Request, res: Response, next: NextFun
 
     })
 
-    res.status(statusCode).json({ code, message: statusCode < 500 ? errorMessage : 'Ocurrió un error en el sistema', ID: idLog });
+    res.status(statusCode).json({ code, message: statusCode < 500 ? errormessage : 'Ocurrió un error en el sistema', ID: idLog });
 
 
 };

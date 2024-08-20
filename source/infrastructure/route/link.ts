@@ -3,6 +3,8 @@ import { validatorRegisterUser, validatorUpdateUser, validatorDeleteUser, valida
 import { validatorPassword, validatorRegisterLink, validatorShortUrl } from '../middlewares/link'
 
 import { validateToken } from '../middlewares/token'
+import { validateTokenRecaptcha } from '../middlewares/recaptchaV3'
+
 import { validatorPermissions } from '../middlewares/authorization'
 
 
@@ -39,9 +41,8 @@ const linkController = new LinkController(userService)
 
 // router.get('/', validateToken, validatorPermissions('user'), linkController.list)
 // router.get('/:id', validateToken, validatorPermissions('user'), validatorGetUser, linkController.get)
-router.get('/short-url/:shortUrl', validatorShortUrl, linkController.getByShortUrl)
-router.post('/', validatorRegisterLink, linkController.register)
-router.post('/validate-password', validatorPassword, linkController.validatePassword)
+router.post('/', validateTokenRecaptcha, validatorRegisterLink, linkController.register)
+router.post('/validate-password', validateTokenRecaptcha, validatorPassword, linkController.validatePassword)
 // router.put('/:id', validateToken, validatorPermissions('user'), validatorUpdateUser, linkController.update)
 // router.delete('/:id', validateToken, validatorPermissions('user'), validatorDeleteUser, linkController.delete)
 
