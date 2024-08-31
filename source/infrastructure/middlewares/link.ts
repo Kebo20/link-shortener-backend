@@ -81,7 +81,7 @@ export const validatorPassword = async (req: Request, res: Response, next: NextF
 
         const schema = z.object({
             password: z.string(),
-            shortUrl: z.string().min(6).max(6)
+            shortUrl: z.string().min(6).max(250)
         }).required({
             password: true,
             shortUrl: true
