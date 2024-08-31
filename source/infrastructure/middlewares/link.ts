@@ -7,7 +7,9 @@ export const validatorRegisterLink = async (req: Request, res: Response, next: N
         const input = req.body;
 
         const schema = z.object({
-            originalUrl: z.string().url(),
+            originalUrl: z.string().url().refine((url) => !url.startsWith(`${process.env.FRONTEND_HOST}`), {
+                message: `La URL no puede comenzar con ${process.env.FRONTEND_HOST}`,
+            }),
             description: z.string().min(0).max(250).optional(),
             password: z.string().min(4).max(8).optional(),
             shortUrl: z.string().min(6).max(250).optional()

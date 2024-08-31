@@ -172,5 +172,26 @@ export class LinkController {
 
     }
 
+    validateShortUrl = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+
+
+        try {
+
+            const { shortUrl } = res.locals.body;
+
+            const link: any = await this.linkService.getByShortUrl(shortUrl, req)
+
+            res.json({ data: link });
+
+        } catch (error) {
+
+            next(error);
+        }
+
+
+
+    }
+
+
 
 }

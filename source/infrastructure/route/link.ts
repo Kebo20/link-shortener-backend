@@ -40,9 +40,11 @@ const userService = new LinkService(linkUseCase, sequelizeRepository)
 const linkController = new LinkController(userService)
 
 // router.get('/', validateToken, validatorPermissions('user'), linkController.list)
-// router.get('/:id', validateToken, validatorPermissions('user'), validatorGetUser, linkController.get)
+// router.post('/:id', validateTokenRecaptcha, validatorGetUser, linkController.get)
+router.post('/validate/:shortUrl', validateTokenRecaptcha, validatorShortUrl, linkController.validateShortUrl)
 router.post('/', validateTokenRecaptcha, validatorRegisterLink, linkController.register)
 router.post('/validate-password', validateTokenRecaptcha, validatorPassword, linkController.validatePassword)
+
 // router.put('/:id', validateToken, validatorPermissions('user'), validatorUpdateUser, linkController.update)
 // router.delete('/:id', validateToken, validatorPermissions('user'), validatorDeleteUser, linkController.delete)
 
