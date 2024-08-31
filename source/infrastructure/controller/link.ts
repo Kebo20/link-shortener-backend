@@ -160,11 +160,12 @@ export class LinkController {
             if (error instanceof HttpError) {
                 // Si el error es de tipo HttpError, responde con su mensaje y código
                 // res.status(400).send(error.message);
+                next(error);
                 res.redirect(301, `${process.env.FRONTEND_HOST}`) // o 302
 
             } else {
-                res.status(404).send('Ocurrió un error');
                 next(error);
+                res.status(404).send('Ocurrió un error');
 
             }
 
