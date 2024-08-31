@@ -12,7 +12,9 @@ export const validatorRegisterLink = async (req: Request, res: Response, next: N
             }),
             description: z.string().min(0).max(250).optional(),
             password: z.string().min(4).max(8).optional(),
-            shortUrl: z.string().min(6).max(250).optional()
+            shortUrl: z.string().min(6).max(250).optional().refine((url) => url === undefined || !url.includes('/'), {
+                message: "La URL corta no puede contener '/'",
+            })
 
 
         }).partial({
