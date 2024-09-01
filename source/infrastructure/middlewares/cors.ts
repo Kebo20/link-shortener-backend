@@ -6,7 +6,9 @@ const ACCEPTED_ORIGINS = [
     'https://test.tecda.pe',
     'http://localhost:5173',
     'http://127.0.0.1:5173',
-    'https://linkevo.app'
+    'https://linkevo.app',
+    'https://www.linkevo.app'
+
 ]
 
 
