@@ -37,3 +37,11 @@ NPM RUN STAR:PM2
 HABILITAR PUERTO 9090 EN EL FIREWALL
 
 sudo docker cp 0760e7069317:/home/app/node_modules ./
+
+
+##### DOCKER #####
+
+sudo docker-compose build
+
+sudo docker-compose up
+
